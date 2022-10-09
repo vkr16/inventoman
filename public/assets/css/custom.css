@@ -1,0 +1,65 @@
+/* Custom Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Poppins&display=swap');
+
+.font-nunito-sans {
+    font-family: "Nunito Sans";
+}
+
+.font-poppins {
+    font-family: "Poppins";
+}
+
+.wh-screen {
+    width: 100vw;
+    height: 100vh;
+}
+
+a {
+    text-decoration: none;
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+textarea:focus,
+.form-select:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+input[type="checkbox"]:focus,
+input[type="checkbox"]:checked,
+.uneditable-input:focus,
+.noglow:focus {
+    border-color: #0d6efd;
+    box-shadow: none;
+    outline: 0 none;
+}
+
+.form-control, .page-link, select{
+    border-radius: 0px !important;
+}
+
+
+.is-invalid,
+.is-valid {
+    box-shadow: none !important;
+}
+
+.custom-sidebar {
+    min-width: 250px;
+    width: 250px;
+    max-width: 250px;
+}
