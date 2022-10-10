@@ -91,6 +91,40 @@
         </div>
     </div>
 
+    <!-- Administrator Reset Password -->
+    <div class="modal fade" id="modalResetPasswordAdministrator" tabindex="-1" aria-labelledby="modalResetPasswordAdministratorLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalResetPasswordAdministratorLabel">
+                        <i class="fa-solid fa-unlock-keyhole"></i>&nbsp; Reset Password
+                    </h1>
+                    <button type="button" class="btn-close rounded-0 noglow" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="showAdministrator">Administrator</label>
+                            <input type="text" autocomplete="off" class="form-control mt-2" name="showAdministrator" id="showAdministrator" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputPassword2">New Password</label>
+                            <input type="password" autocomplete="new-password" class="form-control my-2" name="inputPassword2" id="inputPassword2">
+                        </div>
+                        <div class="mb-3 d-flex align-items-center me-auto">
+                            <input type="checkbox" class="form-check-input rounded-0 mt-0" id="checkShowPassword2" onchange="inputPasswordVisible2()">
+                            <label for="checkShowPassword2" class="form-label mb-0 ms-2">Show password</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary rounded-0" id="resetPasswordButton"><i class="fa-solid fa-floppy-disk"></i>&nbsp; Set Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Administrator Update -->
     <!-- <div class="modal fade" id="modalUpdateAdministrator" tabindex="-1" aria-labelledby="modalUpdateAdministratorLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -205,10 +239,19 @@
             }
         }
 
+        function inputPasswordVisible2() {
+            if ($('#inputPassword2').attr('type') == 'password') {
+                $('#inputPassword2').attr('type', 'text')
+            } else {
+                $('#inputPassword2').attr('type', 'password')
+            }
+        }
+
         function addAdministrator() {
             const employee_number = $('#inputEmployeeNumber')
             const username = $('#inputUsername')
             const password = $('#inputPassword')
+            Notiflix.Loading.pulse()
 
             $.post("<?= base_url('admin/administrators/add') ?>", {
                     employee_number: employee_number.val(),
@@ -216,14 +259,30 @@
                     password: password.val(),
                 })
                 .done(function(data) {
-                    console.log(data)
+                    Notiflix.Loading.remove(500)
+                    setTimeout(function() {
+                        if (data == "admin") {
+                            Notiflix.Notify.warning("This employee already has administrator access!")
+                            $('#modalAddAdministrator').modal('hide')
+                        } else if (data == 'conflict') {
+                            Notiflix.Notify.failure("Username already taken!")
+                        } else if (data == 'success') {
+                            Notiflix.Notify.success("Administrator access credentials has been created for " + username.val())
+                            getAdministrators()
+                            modalAddAdminReset()
+                        }
+                    }, 500)
+                })
+                .fail(function() {
+                    Notiflix.Report.failure('Server Error',
+                        'Please check your connection and server status',
+                        'Okay', )
                 })
         }
 
         function getAdministrators() {
             $.post("<?= base_url('admin/administrators/list') ?>", function(data) {
                     $('#administrators_table_container').html(data)
-                    // console.log(data)
                 })
                 .fail(function() {
                     Notiflix.Report.failure('Server Error',
@@ -235,19 +294,81 @@
         function deleteAdministrator(id, name) {
             Notiflix.Confirm.show(
                 'Delete Administrator Access',
-                'Are you sure want to delete ' + name + '\'s administrator access?',
+                'Are you sure want to delete ' + name + '\'s administrator access? this action cannot be undone',
                 'Yes',
                 'No',
                 () => {
+                    Notiflix.Loading.pulse()
                     $.post("<?= base_url('admin/administrators/delete') ?>", {
                             id: id
                         })
                         .done(function(data) {
-                            alert("Data Loaded: " + data);
-                        });
+                            Notiflix.Loading.remove(500)
+                            setTimeout(function() {
+                                if (data == "success") {
+                                    Notiflix.Notify.success(name + "'s administrator account has been deleted!")
+                                    getAdministrators()
+                                } else if (data == "failed") {
+                                    Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
+                                } else if (data == "notfound") {
+                                    Notiflix.Notify.failure("Administrator account not found!")
+                                    getAdministrators()
+                                }
+                            }, 500);
+                        })
+                        .fail(function() {
+                            Notiflix.Report.failure('Server Error',
+                                'Please check your connection and server status',
+                                'Okay', )
+                        })
                 },
                 () => {}, {},
             );
+        }
+
+        function modalAddAdminReset() {
+            $('#inputEmployeeNumber').val('').removeClass('is-invalid is-valid')
+            $('#employee-valid').hide()
+            $('#employee-invalid').hide()
+
+            $('#inputUsername').val('').removeClass('is-invalid is-valid')
+            $('#username-valid').hide()
+            $('#username-invalid').hide()
+
+            $('#modalAddAdministrator').modal('hide')
+        }
+
+        function resetPasswordModal(id, name, employee_number) {
+            $('#modalResetPasswordAdministrator').modal('show')
+            $('#showAdministrator').val(name + '  -  [ ' + employee_number + ' ]')
+
+            $('#resetPasswordButton').attr('onclick', 'resetPassword(' + id + ')')
+        }
+
+        function resetPassword(id) {
+            const password = $('#inputPassword2')
+            Notiflix.Loading.pulse()
+            $.post("<?= base_url('admin/administrators/reset') ?>", {
+                    id: id,
+                    password: password.val()
+                })
+                .done(function(data) {
+                    Notiflix.Loading.remove(500)
+                    setTimeout(function() {
+                        if (data == "success") {
+                            Notiflix.Notify.success("Password reset successfully!")
+                            $('#inputPassword2').val('')
+                            $('#modalResetPasswordAdministrator').modal('hide')
+                        } else if (data == "failed") {
+                            Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
+                        } else if (data == "notfound") {
+                            Notiflix.Notify.failure("Administrator account not found!")
+                            getAdministrators()
+                        }
+                    }, 500);
+
+
+                });
         }
     </script>
 </body>

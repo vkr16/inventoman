@@ -21,10 +21,10 @@
                 <td class="align-middle"><?= $administrator['position'] ?></td>
                 <td class="align-middle"><?= $administrator['division'] ?></td>
                 <td class="align-middle">
-                    <button class="btn btn-danger btn-sm rounded-0" onclick="deleteAdministrator(<?= $administrator['id'] ?>,'<?= $administrator['name'] ?>')"><i class="fa-solid fa-trash-alt"></i>&nbsp; Delete</button>
+                    <button class="btn btn-danger btn-sm rounded-0" onclick="deleteAdministrator(<?= $administrator['id'] ?>,'<?= $administrator['name'] ?>')" <?= $administrator['id'] == $_SESSION['inventoman_user_session'] ? 'disabled' : '' ?>><i class="fa-solid fa-trash-alt"></i>&nbsp; Delete</button>
                 </td>
                 <td>
-                    <button class="btn btn-primary btn-sm rounded-0" onclick="resetPassword(<?= $administrator['id'] ?>,'<?= $administrator['name'] ?>')"><i class="fa-solid fa-unlock-keyhole"></i>&nbsp; Reset Password</button>
+                    <button class="btn btn-primary btn-sm rounded-0" onclick="resetPasswordModal(<?= $administrator['id'] ?>,'<?= $administrator['name'] ?>','<?= $administrator['employee_number'] ?>')"><i class="fa-solid fa-unlock-keyhole"></i>&nbsp; Reset Password</button>
                 </td>
             </tr>
         <?php

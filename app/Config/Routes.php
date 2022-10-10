@@ -62,6 +62,8 @@ $routes->post('/admin/administrators/validation/username', 'Admin::administrator
 $routes->post('/admin/administrators/add', 'Admin::administratorsAdd');
 $routes->post('/admin/administrators/list', 'Admin::administratorsList');
 $routes->post('/admin/administrators/delete', 'Admin::administratorsDelete');
+$routes->post('/admin/administrators/reset', 'Admin::administratorsReset');
+
 
 
 

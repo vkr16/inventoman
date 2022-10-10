@@ -193,7 +193,7 @@ class Admin extends BaseController
     {
         $session = $_SESSION['inventoman_user_session'];
         $db = \Config\Database::connect();
-        $query = $db->query("SELECT admins.id AS id, admins.username, employees.employee_number, employees.name, employees.position, employees.division FROM admins LEFT JOIN employees ON admins.employee_id = employees.id WHERE admins.deleted_at IS NULL AND admins.id <> $session");
+        $query = $db->query("SELECT admins.id AS id, admins.username, employees.employee_number, employees.name, employees.position, employees.division FROM admins LEFT JOIN employees ON admins.employee_id = employees.id WHERE admins.deleted_at IS NULL");
 
         $data['administrators'] = $query->getResult('array');
         return view('admin/administrators/administrators_table', $data);
@@ -206,6 +206,22 @@ class Admin extends BaseController
 
         if ($this->adminModel->find($admin_id)) {
             if ($this->adminModel->delete($admin_id)) {
+                return "success";
+            } else {
+                return "failed";
+            }
+        } else {
+            return "notfound";
+        }
+    }
+
+    public function administratorsReset()
+    {
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $id = $_POST['id'];
+
+        if ($this->adminModel->find($id)) {
+            if ($this->adminModel->where('id', $id)->set('password', $password)->update()) {
                 return "success";
             } else {
                 return "failed";
