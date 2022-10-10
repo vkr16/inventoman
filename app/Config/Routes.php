@@ -49,6 +49,9 @@ $routes->get('/admin', 'Admin::index');
 $routes->get('/admin/employees', 'Admin::employees');
 $routes->post('/admin/employees/add', 'Admin::employeesAdd');
 $routes->post('/admin/employees/list', 'Admin::employeesList');
+$routes->post('/admin/employees/detail', 'Admin::employeesDetail');
+$routes->post('/admin/employees/update', 'Admin::employeesUpdate');
+$routes->post('/admin/employees/delete', 'Admin::employeesDelete');
 
 
 /**

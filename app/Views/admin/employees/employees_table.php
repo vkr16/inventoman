@@ -10,7 +10,7 @@
         <?php
         foreach ($employees as $index => $employee) {
         ?>
-            <tr>
+            <tr role="button" onclick="employeeUpdateModal(<?= $employee['id'] ?>)">
                 <td></td>
                 <td><?= $employee['employee_number'] ?></td>
                 <td><?= $employee['name'] ?></td>
@@ -29,7 +29,7 @@
             targets: 0
         }],
         order: [
-            [0, 'asc']
+            [2, 'asc']
         ]
     });
 

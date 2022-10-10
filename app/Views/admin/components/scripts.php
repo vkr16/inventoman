@@ -12,5 +12,20 @@
 
      Notiflix.Loading.init({
          svgColor: '#0d6efd',
-     });
+         backgroundColor: 'rgba(255,255,255,0.8)'
+     })
+
+     Notiflix.Block.init({
+         svgColor: '#0d6efd',
+     })
+
+     Notiflix.Report.init({
+         borderRadius: '0px'
+     })
+
+     Notiflix.Confirm.init({
+         borderRadius: '0px',
+         titleColor: '#0d6efd',
+         okButtonBackground: '#0d6efd',
+     })
  </script>

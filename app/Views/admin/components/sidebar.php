@@ -10,7 +10,7 @@
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="<?= base_url('admin') ?>" class="nav-link rounded-0 rounded-0 active" aria-current="page" id="sidebar_dashboard">
+                    <a href="<?= base_url('admin') ?>" class="nav-link rounded-0 link-dark" aria-current="page" id="sidebar_dashboard">
                         <i class="fa-solid fa-layer-group fa-fw"></i>&emsp;
                         Dashboard
                     </a>

@@ -20,6 +20,9 @@
     </div>
 
     <?= $this->include('admin/components/scripts') ?>
+    <script>
+        $('#sidebar_dashboard').removeClass('link-dark').addClass('active')
+    </script>
 </body>
 
 </html>
