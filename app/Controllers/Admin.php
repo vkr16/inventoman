@@ -44,13 +44,20 @@ class Admin extends BaseController
         } else {
             if (!$this->employeeModel->where('employee_number', $employee_number)->find()) {
                 if ($this->employeeModel->insert($employeeData)) {
-                    return "new employee added";
+                    return "success";
                 } else {
-                    return "failed to add";
+                    return "failed";
                 }
             } else {
-                return "employee number already registered";
+                return "conflict";
             }
         }
+    }
+
+    public function employeesList()
+    {
+        $data['employees'] = $this->employeeModel->findAll();
+
+        return view('admin/employees/employees_table', $data);
     }
 }

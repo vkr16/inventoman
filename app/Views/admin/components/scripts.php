@@ -9,4 +9,8 @@
          position: "center-top",
          cssAnimationStyle: "from-top"
      })
+
+     Notiflix.Loading.init({
+         svgColor: '#0d6efd',
+     });
  </script>

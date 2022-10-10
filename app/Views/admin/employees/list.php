@@ -24,25 +24,23 @@
                         <i class="fa-solid fa-user-plus"></i>&nbsp; Add Employee
                     </button>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-hover mt-5" id="employees_table">
+                <div class="table-responsive" id="employees_table_container">
+                    <!-- <table class="table table-hover mt-5" id="employees_table">
                         <thead>
-                            <th>No</th>
                             <th>Employee Number</th>
                             <th>Name</th>
                             <th>Position</th>
                             <th>Division</th>
                         </thead>
-                        <tbody>
-                            <tr role="button">
-                                <td>1</td>
-                                <td>264895001</td>
-                                <td>Fikri Miftah Akmaludin</td>
-                                <td>Head of IT Division</td>
-                                <td>IT</td>
+                        <tbody id="employees_table_body">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table> -->
                 </div>
             </div>
         </section>
@@ -92,14 +90,15 @@
         $('#sidebar_employees').removeClass('link-dark').addClass('active')
 
         $(document).ready(function() {
-            $('#employees_table').DataTable();
+            getEmployees();
+
         });
 
         function addEmployee() {
-            const employee_number = $('#inputEmployeeNumber')
-            const name = $('#inputName')
-            const position = $('#inputPosition')
-            const division = $('#inputDivision')
+            var employee_number = $('#inputEmployeeNumber')
+            var name = $('#inputName')
+            var position = $('#inputPosition')
+            var division = $('#inputDivision')
 
             employee_number.val() == '' ? employee_number.addClass('is-invalid') : employee_number.removeClass('is-invalid');
             name.val() == '' ? name.addClass('is-invalid') : name.removeClass('is-invalid');
@@ -109,6 +108,7 @@
             if (employee_number.val() == '' || name.val() == '' || position.val() == '' || division.val() == '') {
                 Notiflix.Notify.warning("Field cannot be empty!")
             } else {
+                Notiflix.Loading.pulse()
                 $.post("<?= base_url('admin/employees/add') ?>", {
                         employee_number: employee_number.val(),
                         name: name.val(),
@@ -116,10 +116,40 @@
                         division: division.val()
                     })
                     .done(function(data) {
-                        alert("Data Loaded: " + data);
+                        Notiflix.Loading.remove(500)
+                        setTimeout(function() {
+                            if (data == "success") {
+                                Notiflix.Notify.success("New employee data saved!")
+                                getEmployees()
+                                employee_number.val('')
+                                name.val('')
+                                position.val('')
+                                division.val('')
+                                $('#modalAddEmployee').modal('hide')
+                            } else if (data == "conflict") {
+                                Notiflix.Notify.failure("Failed to save, employee number already exist!")
+                            } else if (data == "empty") {
+                                Notiflix.Notify.failure("Field cannot be empty!")
+                            } else if (data == "failed") {
+                                Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
+                            }
+                        }, 500);
                     });
+                Notiflix.Loading.remove(10000)
+                setTimeout(function() {
+                    Notiflix.Notify.failure("It is longer than usual, please check your connection and server status")
+                    setTimeout(function() {
+                        window.location.reload()
+                    }, 3000);
+                }, 10000);
             }
 
+        }
+
+        function getEmployees() {
+            $.post("<?= base_url('admin/employees/list') ?>", function(data) {
+                $('#employees_table_container').html(data)
+            });
         }
     </script>
 </body>
