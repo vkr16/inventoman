@@ -25,22 +25,7 @@
                     </button>
                 </div>
                 <div class="table-responsive" id="employees_table_container">
-                    <!-- <table class="table table-hover mt-5" id="employees_table">
-                        <thead>
-                            <th>Employee Number</th>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Division</th>
-                        </thead>
-                        <tbody id="employees_table_body">
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table> -->
+
                 </div>
             </div>
         </section>

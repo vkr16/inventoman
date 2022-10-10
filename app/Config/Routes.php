@@ -53,6 +53,17 @@ $routes->post('/admin/employees/detail', 'Admin::employeesDetail');
 $routes->post('/admin/employees/update', 'Admin::employeesUpdate');
 $routes->post('/admin/employees/delete', 'Admin::employeesDelete');
 
+/**
+ * Administrator Management
+ */
+$routes->get('/admin/administrators', 'Admin::administrators');
+$routes->post('/admin/administrators/validation/employee', 'Admin::administratorsEmployeeValidation');
+$routes->post('/admin/administrators/validation/username', 'Admin::administratorsUsernameValidation');
+$routes->post('/admin/administrators/add', 'Admin::administratorsAdd');
+$routes->post('/admin/administrators/list', 'Admin::administratorsList');
+$routes->post('/admin/administrators/delete', 'Admin::administratorsDelete');
+
+
 
 /**
  * Authentication & Authorization

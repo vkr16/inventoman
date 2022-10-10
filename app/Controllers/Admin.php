@@ -21,6 +21,10 @@ class Admin extends BaseController
         return view('admin/dashboard');
     }
 
+
+    /**
+     * Employee Management
+     */
     public function employees()
     {
         return view('admin/employees/list');
@@ -116,6 +120,98 @@ class Admin extends BaseController
             } else {
                 return "failed";
             }
+        }
+    }
+
+
+    /**
+     * Administrator Management
+     */
+    public function administrators()
+    {
+        return view('admin/administrators/list');
+    }
+
+    public function administratorsEmployeeValidation()
+    {
+        $employee_number = $_POST['employee_number'];
+
+
+        if ($employee = $this->employeeModel->where('employee_number', $employee_number)->find()) {
+            return json_encode($employee);
+        } else {
+            return "notfound";
+        }
+    }
+
+    public function administratorsUsernameValidation()
+    {
+        $username = $_POST['username'];
+
+        if ($username != '') {
+            if ($this->adminModel->where('username', $username)->find()) {
+                return "conflict";
+            } else {
+                return "available";
+            }
+        } else {
+            return "empty";
+        }
+    }
+
+    public function administratorsAdd()
+    {
+        $employee_number = $_POST['employee_number'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        if ($employee = $this->employeeModel->where('employee_number', $employee_number)->find()) {
+            if ($this->adminModel->where('employee_id', $employee[0]['id'])->find()) {
+                return "admin";
+            } else {
+                if ($this->adminModel->where('username', $username)->find()) {
+                    return "conflict";
+                } else {
+                    $newAdminData = [
+                        "username" => $username,
+                        "password" => password_hash($password, PASSWORD_DEFAULT),
+                        "employee_id" => $employee[0]['id'],
+                    ];
+                    if ($this->adminModel->insert($newAdminData)) {
+                        return "success";
+                    } else {
+                        return "failed";
+                    }
+                }
+            }
+        } else {
+            return "notfound";
+        }
+    }
+
+    public function administratorsList()
+    {
+        $session = $_SESSION['inventoman_user_session'];
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT admins.id AS id, admins.username, employees.employee_number, employees.name, employees.position, employees.division FROM admins LEFT JOIN employees ON admins.employee_id = employees.id WHERE admins.deleted_at IS NULL AND admins.id <> $session");
+
+        $data['administrators'] = $query->getResult('array');
+        return view('admin/administrators/administrators_table', $data);
+        // return $data['administrators'];
+    }
+
+    public function administratorsDelete()
+    {
+        $admin_id = $_POST['id'];
+
+        if ($this->adminModel->find($admin_id)) {
+            if ($this->adminModel->delete($admin_id)) {
+                return "success";
+            } else {
+                return "failed";
+            }
+        } else {
+            return "notfound";
         }
     }
 }

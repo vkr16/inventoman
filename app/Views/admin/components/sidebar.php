@@ -40,7 +40,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link rounded-0 link-dark" id="sidebar_administrators">
+                    <a href="<?= base_url('admin/administrators') ?>" class="nav-link rounded-0 link-dark" id="sidebar_administrators">
                         <i class="fa-solid fa-user-tie fa-fw"></i>&emsp;
                         Administrators
                     </a>
