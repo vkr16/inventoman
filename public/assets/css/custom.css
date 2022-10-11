@@ -5,6 +5,10 @@
     font-family: "Nunito Sans";
 }
 
+.scrollable-y{
+    overflow-y: auto;
+}
+
 .font-poppins {
     font-family: "Poppins";
 }

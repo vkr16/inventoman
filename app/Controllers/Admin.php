@@ -420,4 +420,23 @@ class Admin extends BaseController
             }
         }
     }
+
+    public function assetsDelete()
+    {
+        $assets_id = $_POST['id'];
+
+        if ($item = $this->assetModel->find($assets_id)) {
+            if ($item['current_holder'] == NULL) {
+                if ($this->assetModel->delete($assets_id)) {
+                    return "success";
+                } else {
+                    return "failed";
+                }
+            } else {
+                return "unreturned";
+            }
+        } else {
+            return "notfound";
+        }
+    }
 }

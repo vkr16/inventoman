@@ -14,7 +14,7 @@
 <body>
     <div class="d-flex font-nunito-sans bg-light">
         <?= $this->include('admin/components/sidebar') ?>
-        <section class="vh-100 w-100 scrollable-y" id="topbar-section">
+        <section class="vh-100 w-100 scrollable-y" id="topbar-section" style="max-height: 100vh">
             <?= $this->include('admin/components/topbar') ?>
 
             <div class="mx-2 mx-lg-5 my-4 px-3 py-2">
@@ -53,7 +53,7 @@
                     </table>
                 </div>
 
-                <button class="btn btn-primary rounded-0 mb-3" data-bs-toggle="modal" data-bs-target="#modalAddAssetItem">
+                <button class="btn btn-primary rounded-0 mb-3" onclick="addItemModal()">
                     <i class="fa-solid fa-file-invoice"></i>&nbsp; Add Item
                 </button>
                 <div class="table-responsive" id="invoice_items_table_container">
@@ -319,6 +319,55 @@
             item_name.val(b)
             value.val(c)
             description.val(d)
+        }
+
+        function addItemModal() {
+            $('#modalAddAssetItem').modal('show')
+            $('#inputSerialNumber').val('')
+            $('#inputItemName').val('')
+            $('#inputDescription').val('')
+            $('#inputValue').val('')
+        }
+
+        function deleteItem(asset_id, sn) {
+            Notiflix.Confirm.show(
+                'Delete Item Data',
+                'Are you sure want to delete item ' + sn + '?',
+                'Yes',
+                'No',
+                () => {
+                    Notiflix.Loading.pulse()
+                    $.post("<?= base_url('admin/assets/delete') ?>", {
+                            id: asset_id
+                        })
+                        .done(function(data) {
+                            Notiflix.Loading.remove(500)
+                            setTimeout(() => {
+                                if (data == "success") {
+                                    Notiflix.Notify.success("Item data has been deleted successfully!")
+                                    getInvoicesItems(<?= $invoice['id'] ?>)
+                                } else if (data == "notfound") {
+                                    Notiflix.Notify.failure("Item data not found!")
+                                    getInvoicesItems(<?= $invoice['id'] ?>)
+                                } else if (data == "unreturned") {
+                                    Notiflix.Report.failure(
+                                        'Operation Aborted',
+                                        'Cannot delete item data that has not been returned!',
+                                        'Understand'
+                                    );
+                                } else if (data == "failed") {
+                                    Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
+                                }
+                            }, 500);
+                        })
+                        .fail(function() {
+                            Notiflix.Report.failure('Server Error',
+                                'Please check your connection and server status',
+                                'Okay', )
+                        })
+                },
+                () => {}, {},
+            );
         }
     </script>
 </body>

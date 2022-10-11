@@ -1,4 +1,4 @@
-<table class="table table-hover mt-5" id="items_table">
+<table class="table table-sm table-hover mt-5" id="items_table">
     <thead>
         <th>No</th>
         <th>Serial Number</th>
