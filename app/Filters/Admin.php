@@ -10,10 +10,12 @@ class Admin implements FilterInterface
 {
     protected $session;
     protected $adminModel;
+    protected $employeeModel;
     function __construct()
     {
         $this->session = \Config\Services::session();
         $this->adminModel = model('AdminModel', true, $db);
+        $this->employeeModel = model('EmployeeModel', true, $db);
     }
 
     /**
@@ -36,6 +38,11 @@ class Admin implements FilterInterface
         if ($this->session->has('inventoman_user_session')) {
             if (!$this->adminModel->find($this->session->get('inventoman_user_session'))) {
                 return redirect()->to(base_url('logout'));
+            } else {
+                $admin = $this->adminModel->find($this->session->get('inventoman_user_session'));
+                $employee_id = $admin['employee_id'];
+                $employee = $this->employeeModel->find($employee_id);
+                $this->session->set('inventoman_user_in_session', $employee['name']);
             }
         } else {
             return redirect()->to(base_url());

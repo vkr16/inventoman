@@ -71,6 +71,18 @@ $routes->get('/admin/invoices', 'Admin::invoices');
 $routes->post('/admin/invoices/add', 'Admin::invoicesAdd');
 $routes->post('/admin/invoices/list', 'Admin::invoicesList');
 $routes->post('/admin/invoices/delete', 'Admin::invoicesDelete');
+$routes->post('/admin/invoices/itemlist', 'Admin::invoicesItemList');
+$routes->post('/admin/invoices/editableitemlist', 'Admin::invoicesEditableItemList');
+$routes->get('/admin/invoices/detail', 'Admin::invoicesDetail');
+$routes->post('/admin/invoices/get', 'Admin::invoicesGet');
+$routes->post('/admin/invoices/update', 'Admin::invoicesUpdate');
+
+
+/**
+ * Asset Management
+ */
+$routes->post('/admin/assets/add', 'Admin::assetsAdd');
+
 
 
 

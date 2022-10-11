@@ -32,6 +32,7 @@
         </section>
     </div>
 
+
     <!-- Invoice Add -->
     <div class="modal fade" id="modalAddInvoice" tabindex="-1" aria-labelledby="modalAddInvoiceLabel" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
@@ -44,19 +45,19 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div>
+                        <div class="mb-3">
                             <label for="inputPurchaseOrderNumber">Purchase Order Number</label>
                             <input type="text" class="form-control my-2" name="inputPurchaseOrderNumber" id="inputPurchaseOrderNumber">
                         </div>
-                        <div>
+                        <div class="mb-3">
                             <label for="inputInvoiceNumber">Invoice Number</label>
                             <input type="text" class="form-control my-2" name="inputInvoiceNumber" id="inputInvoiceNumber">
                         </div>
-                        <div>
+                        <div class="mb-3">
                             <label for="inputVendor">Vendor</label>
                             <input type="text" class="form-control my-2" name="inputVendor" id="inputVendor">
                         </div>
-                        <div>
+                        <div class="mb-3">
                             <label for="inputDate">Date</label>
                             <input type="text" class="form-control my-2" name="inputDate" id="inputDate" readonly>
                         </div>
@@ -70,6 +71,52 @@
         </div>
     </div>
 
+    <!-- Invoice Detail -->
+    <div class="modal fade" id="modalInvoiceDetail" tabindex="-1" aria-labelledby="modalInvoiceDetailLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalInvoiceDetailLabel">
+                        <i class="fa-solid fa-file-invoice"></i>&nbsp; Invoice Detail
+                    </h1>
+                    <button type="button" class="btn-close rounded-0 noglow" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-6 mb-5">
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td>Purchase Order No.</td>
+                                <td>:</td>
+                                <td id="showPurchaseOrderNo">051231561231564</td>
+                            </tr>
+                            <tr>
+                                <td>Invoice No.</td>
+                                <td>:</td>
+                                <td id="showInvoiceNo">INV/SD9HF/435/345345/UIBB</td>
+                            </tr>
+                            <tr>
+                                <td>Vendor</td>
+                                <td>:</td>
+                                <td id="showVendor">Lenovo Indonesia</td>
+                            </tr>
+                            <tr>
+                                <td>Date</td>
+                                <td>:</td>
+                                <td id="showDate">26/10/2022</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-responsive" id="invoice_items_table_container">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>
+                    <a href="#" class="btn btn-primary rounded-0" id="editPageButton">Edit Page <i class="fa-solid fa-up-right-from-square"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
     <?= $this->include('admin/components/scripts') ?>
     <script src="<?= base_url('public/assets/library/datatables-1.12.1/datatables.min.js') ?>"></script>
     <script src="<?= base_url('public/assets/library/bootstrap-datepicker-1.9.0/bootstrap-datepicker.min.js') ?>"></script>
@@ -154,6 +201,21 @@
                 })
         }
 
+        function getInvoicesDetail(invoice_id) {
+            $.post("<?= base_url('admin/invoices/itemlist') ?>", {
+                    invoice_id: invoice_id
+                })
+                .done(function(data) {
+                    $('#invoice_items_table_container').html(data)
+
+                })
+                .fail(function() {
+                    Notiflix.Report.failure('Server Error',
+                        'Please check your connection and server status',
+                        'Okay', )
+                })
+        }
+
         function deleteInvoice(id, invoice_no) {
             Notiflix.Report.warning(
                 'Delete Invoice',
@@ -217,6 +279,16 @@
                     );
                 },
             );
+        }
+
+        function invoiceDetailModal(invoice_id, purchase_no, invoice_no, vendor, date) {
+            $('#modalInvoiceDetail').modal('show')
+            getInvoicesDetail(invoice_id)
+            $('#showPurchaseOrderNo').html(purchase_no)
+            $('#showInvoiceNo').html(invoice_no)
+            $('#showVendor').html(vendor)
+            $('#showDate').html(date)
+            $('#editPageButton').attr("href", "<?= base_url('admin/invoices/detail') ?>?i=" + invoice_id)
         }
     </script>
 </body>

@@ -305,4 +305,119 @@ class Admin extends BaseController
             return "notfound";
         }
     }
+
+    public function invoicesItemList()
+    {
+
+        $invoice_id = $_POST['invoice_id'];
+
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT assets.id,assets.serial_number,assets.item_name,assets.description,assets.value,employees.name as holder  FROM assets JOIN employees ON assets.current_holder=employees.id  WHERE assets.deleted_at IS NULL AND assets.invoice_id=$invoice_id UNION ALL  SELECT assets.id,assets.serial_number,assets.item_name,assets.description,assets.value, assets.current_holder FROM assets WHERE assets.current_holder IS NULL AND assets.deleted_at IS NULL AND assets.invoice_id=$invoice_id");
+
+        $data['items'] = $query->getResult('array');
+
+        return view('admin/invoices/items_table', $data);
+    }
+
+    public function invoicesEditableItemList()
+    {
+
+        $invoice_id = $_POST['invoice_id'];
+
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT assets.id,assets.serial_number,assets.item_name,assets.description,assets.value,employees.name as holder  FROM assets JOIN employees ON assets.current_holder=employees.id  WHERE assets.deleted_at IS NULL AND assets.invoice_id=$invoice_id UNION ALL  SELECT assets.id,assets.serial_number,assets.item_name,assets.description,assets.value, assets.current_holder FROM assets WHERE assets.current_holder IS NULL AND assets.deleted_at IS NULL AND assets.invoice_id=$invoice_id");
+
+        $data['items'] = $query->getResult('array');
+
+        return view('admin/invoices/editable_items_table', $data);
+    }
+
+    public function invoicesDetail()
+    {
+        $invoice_id = $_GET['i'];
+
+        $data['invoice'] = $this->invoiceModel->find($invoice_id);
+
+        return view('admin/invoices/detail', $data);
+    }
+
+    public function invoicesGet()
+    {
+        $invoice_id = $_POST['invoice_id'];
+
+        $data['invoice'] = $this->invoiceModel->find($invoice_id);
+        $data['invdate'] = date('Y/m/d', $data['invoice']['date']);
+        return json_encode($data);
+    }
+
+    public function invoicesUpdate()
+    {
+        $invoice_id = $_POST['invoice_id'];
+        $purchase_no = trim($_POST['purchase_no']);
+        $invoice_no = trim($_POST['invoice_no']);
+        $vendor = trim($_POST['vendor']);
+        $date = date_format(date_create($_POST['date']), "U");
+
+        $newInvoiceData = [
+            "purchase_no" => $purchase_no,
+            "invoice_no" => $invoice_no,
+            "vendor" => $vendor,
+            "date" => $date,
+        ];
+
+        if ($purchase_no == '' || $invoice_no == '' || $vendor == '' || $date == '') {
+            return "empty";
+        } else {
+            $db = \Config\Database::connect();
+            $builder = $db->table('invoices');
+
+            $duplication = $builder->select('*')->where('id <>', $invoice_id)->where('invoice_no =', $invoice_no)->countAllResults();
+
+            if ($duplication > 0) {
+                return "conflict";
+            } else {
+                if ($this->invoiceModel->where('id', $invoice_id)->set($newInvoiceData)->update()) {
+                    return "success";
+                } else {
+                    return "failed";
+                }
+            }
+        }
+    }
+
+
+
+    /**
+     * Asset Management
+     */
+    public function assetsAdd()
+    {
+        $invoice_id = trim($_POST['invoice_id']);
+        $serial_number = trim($_POST['serial_number']);
+        $item_name = trim($_POST['item_name']);
+        $description = trim($_POST['description']);
+        $value = trim($_POST['value']);
+
+        $newAssetData = [
+            "invoice_id" => $invoice_id,
+            "serial_number" => $serial_number,
+            "item_name" => $item_name,
+            "description" => $description,
+            "value" => $value
+        ];
+
+        if ($invoice_id == '' || $serial_number == '' || $item_name == '' || $description == '' || $value == '') {
+            return "empty";
+        } else {
+            if ($this->assetModel->where('serial_number', $serial_number)->find()) {
+                return "conflict";
+            } else {
+                if ($this->assetModel->insert($newAssetData)) {
+                    return "success";
+                } else {
+                    return "failed";
+                }
+            }
+        }
+    }
 }

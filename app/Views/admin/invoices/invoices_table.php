@@ -19,7 +19,7 @@
                 <td><?= $invoice['vendor'] ?></td>
                 <td><?= date("d M Y", $invoice['date']) ?></td>
                 <td><button class="btn btn-danger btn-sm rounded-0" onclick="deleteInvoice(<?= $invoice['id'] ?>,'<?= $invoice['invoice_no'] ?>')"><i class="fa-solid fa-trash-can"></i>&nbsp; Delete</button></td>
-                <td><button class="btn btn-primary btn-sm rounded-0" onclick="invoiceDetailModal(<?= $invoice['id'] ?>)"><i class="fa-solid fa-file-invoice"></i>&nbsp; Detail</button></td>
+                <td><button class="btn btn-primary btn-sm rounded-0" onclick="invoiceDetailModal(<?= $invoice['id'] ?>,'<?= $invoice['purchase_no'] ?>','<?= $invoice['invoice_no'] ?>','<?= $invoice['vendor'] ?>','<?= date('j F Y', $invoice['date']) ?>')"><i class="fa-solid fa-file-invoice"></i>&nbsp; Detail</button></td>
             </tr>
         <?php
         }

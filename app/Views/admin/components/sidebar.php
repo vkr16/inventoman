@@ -56,7 +56,7 @@
             <div class="px-3">
                 <a href="#" class="d-flex align-items-center link-dark text-decoration-none">
                     <img src="<?= base_url('public/assets/img/user.png') ?>" alt="" width="32" height="32" class="border me-3">
-                    <p class="mb-0">Fikri Miftah</p>
+                    <p class="mb-0"><?= $_SESSION['inventoman_user_in_session'] ?></p>
                 </a>
             </div>
         </div>
