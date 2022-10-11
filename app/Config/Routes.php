@@ -64,6 +64,13 @@ $routes->post('/admin/administrators/list', 'Admin::administratorsList');
 $routes->post('/admin/administrators/delete', 'Admin::administratorsDelete');
 $routes->post('/admin/administrators/reset', 'Admin::administratorsReset');
 
+/**
+ * Invoice Management
+ */
+$routes->get('/admin/invoices', 'Admin::invoices');
+$routes->post('/admin/invoices/add', 'Admin::invoicesAdd');
+$routes->post('/admin/invoices/list', 'Admin::invoicesList');
+$routes->post('/admin/invoices/delete', 'Admin::invoicesDelete');
 
 
 

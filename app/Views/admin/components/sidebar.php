@@ -16,7 +16,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link rounded-0 link-dark" id="sidebar_invoices">
+                    <a href="<?= base_url('admin/invoices') ?>" class="nav-link rounded-0 link-dark" id="sidebar_invoices">
                         <i class="fa-solid fa-file-invoice fa-fw"></i>&emsp;
                         Invoices
                     </a>

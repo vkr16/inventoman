@@ -254,6 +254,8 @@
                                 $('#modalUpdateEmployee').modal('hide')
                             } else if (data == "conflict") {
                                 Notiflix.Notify.failure("Failed to save, employee number already exist!")
+                            } else if (data == "empty") {
+                                Notiflix.Notify.failure("Field cannot be empty!")
                             } else if (data == "failed") {
                                 Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
                             }

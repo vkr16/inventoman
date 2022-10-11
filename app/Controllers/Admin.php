@@ -9,11 +9,15 @@ class Admin extends BaseController
 
     protected $employeeModel;
     protected $adminModel;
+    protected $invoiceModel;
+    protected $assetModel;
 
     function __construct()
     {
         $this->employeeModel = model('EmployeeModel', true, $db);
         $this->adminModel = model('AdminModel', true, $db);
+        $this->invoiceModel = model('InvoiceModel', true, $db);
+        $this->assetModel = model('AssetModel', true, $db);
     }
 
     public function index()
@@ -32,10 +36,10 @@ class Admin extends BaseController
 
     public function employeesAdd()
     {
-        $employee_number    = $_POST['employee_number'];
-        $name               = $_POST['name'];
-        $position           = $_POST['position'];
-        $division           = $_POST['division'];
+        $employee_number    = trim($_POST['employee_number']);
+        $name               = trim($_POST['name']);
+        $position           = trim($_POST['position']);
+        $division           = trim($_POST['division']);
 
         $employeeData = [
             "employee_number" => $employee_number,
@@ -80,10 +84,10 @@ class Admin extends BaseController
     public function employeesUpdate()
     {
         $employee_id = $_POST['id'];
-        $employee_number = $_POST['employee_number'];
-        $name = $_POST['name'];
-        $position = $_POST['position'];
-        $division = $_POST['division'];
+        $employee_number = trim($_POST['employee_number']);
+        $name = trim($_POST['name']);
+        $position = trim($_POST['position']);
+        $division = trim($_POST['division']);
 
         $updatedData = [
             "employee_number" => $employee_number,
@@ -92,18 +96,22 @@ class Admin extends BaseController
             "division" => $division,
         ];
 
-        $db = \Config\Database::connect();
-        $builder = $db->table('employees');
-
-        $duplication = $builder->select('*')->where('id <>', $employee_id)->where('employee_number =', $employee_number)->countAllResults();
-
-        if ($duplication > 0) {
-            return "conflict";
+        if ($employee_id == '' || $employee_number == '' || $name == '' || $position == '' || $division == '') {
+            return "empty";
         } else {
-            if ($this->employeeModel->where('id', $employee_id)->set($updatedData)->update()) {
-                return "success";
+            $db = \Config\Database::connect();
+            $builder = $db->table('employees');
+
+            $duplication = $builder->select('*')->where('id <>', $employee_id)->where('employee_number =', $employee_number)->countAllResults();
+
+            if ($duplication > 0) {
+                return "conflict";
             } else {
-                return "failed";
+                if ($this->employeeModel->where('id', $employee_id)->set($updatedData)->update()) {
+                    return "success";
+                } else {
+                    return "failed";
+                }
             }
         }
     }
@@ -162,7 +170,7 @@ class Admin extends BaseController
     public function administratorsAdd()
     {
         $employee_number = $_POST['employee_number'];
-        $username = $_POST['username'];
+        $username = trim($_POST['username']);
         $password = $_POST['password'];
 
         if ($employee = $this->employeeModel->where('employee_number', $employee_number)->find()) {
@@ -197,7 +205,6 @@ class Admin extends BaseController
 
         $data['administrators'] = $query->getResult('array');
         return view('admin/administrators/administrators_table', $data);
-        // return $data['administrators'];
     }
 
     public function administratorsDelete()
@@ -225,6 +232,74 @@ class Admin extends BaseController
                 return "success";
             } else {
                 return "failed";
+            }
+        } else {
+            return "notfound";
+        }
+    }
+
+
+    /**
+     * Invoice Management
+     */
+    public function invoices()
+    {
+        return view('admin/invoices/list');
+    }
+
+    public function invoicesAdd()
+    {
+        $purchase_no = trim($_POST['purchase_no']);
+        $invoice_no = trim($_POST['invoice_no']);
+        $vendor = trim($_POST['vendor']);
+        $date = date_format(date_create($_POST['date']), "U");
+
+        $newInvoice = [
+            "purchase_no" => $purchase_no,
+            "invoice_no" => $invoice_no,
+            "vendor" => $vendor,
+            "date" => $date,
+        ];
+
+        if ($purchase_no == '' || $invoice_no == '' || $vendor == '' || $date == '') {
+            return "empty";
+        } else {
+            if (!$this->invoiceModel->where('invoice_no', $invoice_no)->find()) {
+                if ($this->invoiceModel->insert($newInvoice)) {
+                    return "success";
+                } else {
+                    return "failed";
+                }
+            } else {
+                return "conflict";
+            }
+        }
+    }
+
+    public function invoicesList()
+    {
+        $data['invoices'] = $this->invoiceModel->findAll();
+
+        return view('admin/invoices/invoices_table', $data);
+    }
+
+    public function invoicesDelete()
+    {
+        $invoice_id = $_POST['id'];
+
+        if ($this->invoiceModel->find($invoice_id)) {
+            if ($this->assetModel->where("invoice_id = $invoice_id AND current_holder IS NOT NULL")->find()) {
+                return "unreturned";
+            } else {
+                if ($this->invoiceModel->delete($invoice_id)) {
+                    if ($this->assetModel->where('invoice_id', $invoice_id)->delete()) {
+                        return "success";
+                    } else {
+                        return "failed-assets";
+                    }
+                } else {
+                    return "failed-invoice";
+                }
             }
         } else {
             return "notfound";

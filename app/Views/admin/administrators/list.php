@@ -125,50 +125,6 @@
         </div>
     </div>
 
-
-    <!-- Administrator Update -->
-    <!-- <div class="modal fade" id="modalUpdateAdministrator" tabindex="-1" aria-labelledby="modalUpdateAdministratorLabel" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-0">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalUpdateAdministratorLabel">
-                        <i class="fa-solid fa-user-pen"></i>&nbsp; Update Administrator
-                    </h1>
-                    <button type="button" class="btn-close rounded-0 noglow" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="modalBodyUpdateAdministrator">
-                    <form>
-                        <div class="mb-3">
-                            <label for="updateAdministratorNumber">Administrator Number</label>
-                            <input type="text" class="form-control my-2 updatable" name="updateAdministratorNumber" id="updateAdministratorNumber">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="updateName">Name</label>
-                            <input type="text" class="form-control my-2 updatable" name="updateName" id="updateName">
-                        </div>
-                        <div class="mb-3">
-                            <label for="updatePosition">Position</label>
-                            <input type="text" class="form-control my-2 updatable" name="updatePosition" id="updatePosition">
-                        </div>
-                        <div class="mb-3">
-                            <label for="updateDivision">Division</label>
-                            <input type="text" class="form-control my-2 updatable" name="updateDivision" id="updateDivision">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-danger rounded-0" id="administratorDeleteButton"><i class="fa-solid fa-trash-alt"></i>&nbsp; Delete</button>
-
-                    <span>
-                        <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary rounded-0" id="administratorUpdateButton"><i class="fa-solid fa-floppy-disk"></i>&nbsp; Save</button>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
     <?= $this->include('admin/components/scripts') ?>
     <script src="<?= base_url('public/assets/library/datatables-1.12.1/datatables.min.js') ?>"></script>
     <script>

@@ -33,7 +33,11 @@ class Admin implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (!$this->session->has('inventoman_user_session')) {
+        if ($this->session->has('inventoman_user_session')) {
+            if (!$this->adminModel->find($this->session->get('inventoman_user_session'))) {
+                return redirect()->to(base_url('logout'));
+            }
+        } else {
             return redirect()->to(base_url());
         }
     }
