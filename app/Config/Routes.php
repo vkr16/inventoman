@@ -77,7 +77,6 @@ $routes->get('/admin/invoices/detail', 'Admin::invoicesDetail');
 $routes->post('/admin/invoices/get', 'Admin::invoicesGet');
 $routes->post('/admin/invoices/update', 'Admin::invoicesUpdate');
 
-
 /**
  * Asset Management
  */
@@ -86,6 +85,13 @@ $routes->post('/admin/assets/add', 'Admin::assetsAdd');
 $routes->post('/admin/assets/delete', 'Admin::assetsDelete');
 $routes->post('/admin/assets/update', 'Admin::assetsUpdate');
 $routes->post('/admin/assets/list', 'Admin::assetsList');
+
+/**
+ * Handover Management
+ */
+$routes->get('/admin/handovers', 'Admin::handovers');
+$routes->post('/admin/handovers/list', 'Admin::handoversList');
+$routes->post('/admin/handovers/add', 'Admin::handoversAdd');
 
 
 

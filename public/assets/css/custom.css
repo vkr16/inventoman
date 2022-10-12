@@ -45,6 +45,7 @@ input[type="tel"]:focus,
 input[type="color"]:focus,
 input[type="checkbox"]:focus,
 input[type="checkbox"]:checked,
+input[type="radio"]:checked,
 .uneditable-input:focus,
 .noglow:focus {
     border-color: #0d6efd;

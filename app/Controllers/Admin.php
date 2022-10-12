@@ -11,6 +11,7 @@ class Admin extends BaseController
     protected $adminModel;
     protected $invoiceModel;
     protected $assetModel;
+    protected $handoverModel;
 
     function __construct()
     {
@@ -18,6 +19,7 @@ class Admin extends BaseController
         $this->adminModel = model('AdminModel', true, $db);
         $this->invoiceModel = model('InvoiceModel', true, $db);
         $this->assetModel = model('AssetModel', true, $db);
+        $this->handoverModel = model('HandoverModel', true, $db);
     }
 
     public function index()
@@ -491,5 +493,57 @@ class Admin extends BaseController
         $data['assets'] = $query->getResult('array');
 
         return view('admin/assets/assets_table', $data);
+    }
+
+    /**
+     * Handover Management
+     */
+    public function handovers()
+    {
+        return view('admin/handovers/list');
+    }
+
+    public function handoversList()
+    {
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT handovers.id, adm.name as admin, adm.id as admin_id, emp.name as employee, emp.id as employee_id, handovers.category, handovers.status FROM handovers JOIN employees as emp ON handovers.employee_id=emp.id JOIN employees as adm ON handovers.admin_emp_id=adm.id WHERE handovers.deleted_at IS NULL");
+
+        $data['handovers'] = $query->getResult('array');
+
+        return view('admin/handovers/handovers_table', $data);
+    }
+
+    public function handoversAdd()
+    {
+        $employee_number = trim($_POST['employee_number']);
+        $category = trim($_POST['category']);
+
+        $admin_id = $_SESSION['inventoman_user_session'];
+        $admin = $this->adminModel->find($admin_id);
+        $adminEmployee = $this->employeeModel->find($admin['employee_id']);
+        $adminsEmployeeId = $adminEmployee['id'];
+
+
+        if ($this->handoverModel->where('status', 'pending')->find()) {
+            return "conflict";
+        } else {
+            if ($employee = $this->employeeModel->where('employee_number', $employee_number)->find()) {
+                $employee_id = $employee[0]['id'];
+
+                $handoverData = [
+                    "admin_emp_id" => $adminsEmployeeId,
+                    "employee_id" => $employee_id,
+                    "category" => $category,
+                    "status" => 'pending'
+                ];
+                if ($this->handoverModel->insert($handoverData)) {
+                    return "success";
+                } else {
+                    return "failed";
+                }
+            } else {
+                return "notfound";
+            }
+        }
     }
 }

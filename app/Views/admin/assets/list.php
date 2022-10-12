@@ -81,7 +81,7 @@
                     <button type="button" class="btn-close rounded-0 noglow" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-5">
+                    <div class="">
                         <table class="table table-sm table-borderless">
                             <tr>
                                 <td style="width: 180px" class="fw-semibold">Invoice Number</td>

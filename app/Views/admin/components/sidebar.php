@@ -28,7 +28,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link rounded-0 link-dark" id="sidebar_handovers">
+                    <a href="<?= base_url('admin/handovers') ?>" class="nav-link rounded-0 link-dark" id="sidebar_handovers">
                         <i class="fa-solid fa-arrow-right-arrow-left fa-fw"></i>&emsp;
                         Handovers
                     </a>
