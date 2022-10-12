@@ -15,7 +15,7 @@
                 <td class="align-middle"><?= $item['serial_number'] ?></td>
                 <td class="align-middle"><?= $item['item_name'] ?></td>
                 <td class="align-middle">Rp <?= number_format($item['value'], 0, ',', '.') ?></td>
-                <td class="align-middle"><?= $item['holder'] ?></td>
+                <td class="align-middle"><?= $item['holder'] == NULL ? '<span style="color:#b3b3b3"><i class="fa-solid fa-boxes-packing"></i>&nbsp; Inventory</span>' : $item['holder'] ?></td>
             </tr>
         <?php
         }

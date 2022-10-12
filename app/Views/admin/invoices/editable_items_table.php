@@ -20,7 +20,7 @@
                 <td class="align-middle">Rp <?= number_format($item['value'], 0, ',', '.') ?></td>
                 <td class="align-middle"><?= $item['holder'] == NULL ? '<span style="color:#b3b3b3"><i class="fa-solid fa-boxes-packing"></i>&nbsp; Inventory</span>' : $item['holder'] ?></td>
                 <td class="align-middle"><button class="btn btn-danger btn-sm rounded-0" onclick="deleteItem(<?= $item['id'] ?>,'<?= $item['serial_number'] ?>')"><i class="fa-solid fa-trash-can"></i>&nbsp; Delete</button></td>
-                <td class="align-middle"><button class="btn btn-primary btn-sm rounded-0"><i class="fa-solid fa-trash-can"></i>&nbsp; Edit</button></td>
+                <td class="align-middle"><button class="btn btn-primary btn-sm rounded-0" onclick="openUpdateItemModal(<?= $item['id'] ?>,'<?= $item['serial_number'] ?>','<?= $item['item_name'] ?>','<?= $item['value'] ?>','<?= $item['description'] ?>')"><i class="fa-regular fa-pen-to-square"></i>&nbsp; Edit</button></td>
                 <td class="align-middle"><button class="btn btn-dark btn-sm rounded-0" onclick="addDuplicate('<?= $item['serial_number'] ?>','<?= $item['item_name'] ?>','<?= $item['value'] ?>','<?= $item['description'] ?>')"><i class="fa-solid fa-clone"></i>&nbsp; Duplicate</button></td>
             </tr>
         <?php

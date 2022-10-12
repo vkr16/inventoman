@@ -439,4 +439,57 @@ class Admin extends BaseController
             return "notfound";
         }
     }
+
+    public function assetsUpdate()
+    {
+        $assets_id = trim($_POST['asset_id']);
+        $serial_number = trim($_POST['serial_number']);
+        $item_name = trim($_POST['item_name']);
+        $value = trim($_POST['value']);
+        $description = trim($_POST['description']);
+
+        $updatedAssetData = [
+            "serial_number" => $serial_number,
+            "item_name" => $item_name,
+            "description" => $description,
+            "value" => $value
+        ];
+        if ($serial_number == '' || $item_name == '' || $description == '' || $value == '') {
+            return "empty";
+        } else {
+            if ($this->assetModel->find($assets_id)) {
+                $db = \Config\Database::connect();
+                $builder = $db->table('assets');
+
+                $duplication = $builder->select('*')->where('id <>', $assets_id)->where('serial_number =', $serial_number)->where('deleted_at =', NULL)->countAllResults();
+
+                if ($duplication > 0) {
+                    return "conflict";
+                } else {
+                    if ($this->assetModel->where('id', $assets_id)->set($updatedAssetData)->update()) {
+                        return "success";
+                    } else {
+                        return "failed";
+                    }
+                }
+            } else {
+                return "notfound";
+            }
+        }
+    }
+
+    public function assets()
+    {
+        return view('admin/assets/list');
+    }
+
+    public function assetsList()
+    {
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT assets.id,assets.serial_number,assets.item_name,assets.description,assets.value ,invoices.id as invoice_id,invoices.invoice_no, employees.id as holder_id,employees.name as holder FROM assets JOIN employees ON assets.current_holder=employees.id JOIN invoices ON assets.invoice_id=invoices.id WHERE assets.deleted_at IS NULL UNION SELECT assets.id,assets.serial_number,assets.item_name,assets.description,assets.value ,invoices.id as invoice_id,invoices.invoice_no,current_holder,current_holder FROM assets JOIN employees ON assets.current_holder IS NULL JOIN invoices ON assets.invoice_id=invoices.id WHERE assets.deleted_at IS NULL");
+
+        $data['assets'] = $query->getResult('array');
+
+        return view('admin/assets/assets_table', $data);
+    }
 }

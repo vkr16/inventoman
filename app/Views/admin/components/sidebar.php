@@ -22,7 +22,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link rounded-0 link-dark" id="sidebar_assets">
+                    <a href="<?= base_url('admin/assets') ?>" class="nav-link rounded-0 link-dark" id="sidebar_assets">
                         <i class="fa-solid fa-boxes-packing fa-fw"></i>&emsp;
                         Assets
                     </a>

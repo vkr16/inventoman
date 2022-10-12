@@ -141,6 +141,45 @@
         </div>
     </div>
 
+    <!-- Asset Item Update -->
+    <div class="modal fade" id="modalUpdateAssetItem" tabindex="-1" aria-labelledby="modalUpdateAssetItemLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalUpdateAssetItemLabel">
+                        <i class="fa-solid fa-box-open"></i>&nbsp; Edit Item
+                    </h1>
+                    <button type="button" class="btn-close rounded-0 noglow" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="updateSerialNumber">Serial Number</label>
+                            <input type="text" class="form-control my-2" name="updateSerialNumber" id="updateSerialNumber">
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateItemName">Item Name</label>
+                            <input type="text" class="form-control my-2" name="updateItemName" id="updateItemName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateDescription">Description</label>
+                            <textarea type="text" class="form-control my-2" name="updateDescription" id="updateDescription"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateValue">Item Value (Rp)</label>
+                            <input type="number" class="form-control mt-2" name="updateValue" id="updateValue">
+                            <small class="mb-2">*Dont use separator!, instead type "1000" for "1.000"</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary rounded-0" id="updateAssetItemButton"><i class="fa-solid fa-floppy-disk"></i>&nbsp; Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <?= $this->include('admin/components/scripts') ?>
     <script src="<?= base_url('public/assets/library/datatables-1.12.1/datatables.min.js') ?>"></script>
     <script src="<?= base_url('public/assets/library/bootstrap-datepicker-1.9.0/bootstrap-datepicker.min.js') ?>"></script>
@@ -361,6 +400,7 @@
                             }, 500);
                         })
                         .fail(function() {
+                            Notiflix.Loading.remove()
                             Notiflix.Report.failure('Server Error',
                                 'Please check your connection and server status',
                                 'Okay', )
@@ -368,6 +408,60 @@
                 },
                 () => {}, {},
             );
+        }
+
+        function openUpdateItemModal(asset_id, serial_number, item_name, value, description) {
+            $('#modalUpdateAssetItem').modal('show')
+            $('#updateSerialNumber').val(serial_number)
+            $('#updateItemName').val(item_name)
+            $('#updateValue').val(value)
+            $('#updateDescription').val(description)
+
+            $('#updateAssetItemButton').attr('onclick', 'updateAssetItem(' + asset_id + ')')
+        }
+
+        function updateAssetItem(asset_id) {
+            const invoice_id = <?= $invoice['id'] ?>;
+            const serial_number = $('#updateSerialNumber').val()
+            const item_name = $('#updateItemName').val()
+            const value = $('#updateValue').val()
+            const description = $('#updateDescription').val()
+            Notiflix.Loading.pulse()
+            $.post("<?= base_url('admin/assets/update') ?>", {
+                    asset_id: asset_id,
+                    serial_number: serial_number,
+                    item_name: item_name,
+                    value: value,
+                    description: description
+                })
+                .done(function(data) {
+                    console.log(data)
+                    Notiflix.Loading.remove(500)
+                    setTimeout(() => {
+                        if (data == "success") {
+                            Notiflix.Notify.success("Item data updated successfully!")
+                            getInvoicesItems(invoice_id)
+                            $('#modalUpdateAssetItem').modal('hide')
+                        } else if (data == "conflict") {
+                            Notiflix.Notify.failure("Failed to save, serial number already exist!")
+                            getInvoicesItems(invoice_id)
+                        } else if (data == "notfound") {
+                            Notiflix.Notify.failure("Item data not found!")
+                            getInvoicesItems(invoice_id)
+                            $('#modalUpdateAssetItem').modal('hide')
+                        } else if (data == "empty") {
+                            Notiflix.Notify.failure("Field cannot be empty!")
+                        } else if (data == "failed") {
+                            Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
+                        }
+                    }, 500)
+                })
+                .fail(function() {
+                    Notiflix.Loading.remove()
+                    Notiflix.Report.failure('Server Error',
+                        'Please check your connection and server status',
+                        'Okay', )
+                })
         }
     </script>
 </body>

@@ -81,8 +81,11 @@ $routes->post('/admin/invoices/update', 'Admin::invoicesUpdate');
 /**
  * Asset Management
  */
+$routes->get('/admin/assets', 'Admin::assets');
 $routes->post('/admin/assets/add', 'Admin::assetsAdd');
 $routes->post('/admin/assets/delete', 'Admin::assetsDelete');
+$routes->post('/admin/assets/update', 'Admin::assetsUpdate');
+$routes->post('/admin/assets/list', 'Admin::assetsList');
 
 
 
