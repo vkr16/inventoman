@@ -606,4 +606,23 @@ class Admin extends BaseController
             return "notfound";
         }
     }
+
+    public function handoversItemList()
+    {
+        $handover_id = $_POST['handover_id'];
+
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT assets.id, assets.serial_number, assets.item_name, assets.description, assets.value FROM handover_items JOIN assets ON assets.id = handover_items.asset_id WHERE assets.deleted_at IS NULL AND handover_items.handover_id = $handover_id");
+
+        $data['items'] = $query->getResult('array');
+
+        return view('admin/handovers/handover_items_table', $data);
+    }
+
+    public function handoversAvailableItems()
+    {
+        $handover_id = $_POST['handover_id'];
+        $data = [];
+        return view('admin/handovers/handover_available_items_table', $data);
+    }
 }

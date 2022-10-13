@@ -73,6 +73,27 @@
         </section>
     </div>
 
+    <!-- Handover Items Add -->
+    <div class="modal fade" id="modalAddHandoverItems" tabindex="-1" aria-labelledby="modalAddHandoverItemsLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalAddHandoverItemsLabel">
+                        <i class="fa-regular fa-square-plus"></i>&nbsp; Add Items
+                    </h1>
+                    <button type="button" class="btn-close rounded-0 noglow" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="handover_available_items_table_container">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary rounded-0" onclick="addHandover()"><i class="fa-solid fa-floppy-disk"></i>&nbsp; Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <?= $this->include('admin/components/scripts') ?>
     <script src="<?= base_url('public/assets/library/datatables-1.12.1/datatables.min.js') ?>"></script>
     <script src="<?= base_url('public/assets/library/bootstrap-datepicker-1.9.0/bootstrap-datepicker.min.js') ?>"></script>
@@ -88,6 +109,7 @@
 
         $(document).ready(function() {
             getHandoverDetail()
+            getHandoverItems()
         })
 
         function getHandoverDetail() {
@@ -106,7 +128,7 @@
                         $('#spanDeleteHandoverButton').html('<button class="btn btn-danger rounded-0 me-3" onclick="deleteHandover(' + handover_id + ')"> <i class="fa-solid fa-trash-can"></i>&nbsp; Delete </button>')
                         $('#spanValidateHandoverButton').html('<button class="btn btn-primary rounded-0 me-3" onclick="validateHandover(' + handover_id + ')"> <i class="fa-solid fa-signature"></i>&nbsp; Validate </button>')
                         $('#spanPrintHandoverButton').html('')
-                        $('#spanAddItemButton').html('<button class="btn btn-primary rounded-0 mb-3" onclick="addItemModal()"> <i class="fa-regular fa-square-plus"></i>&nbsp; Add Item </button>')
+                        $('#spanAddItemButton').html('<button class="btn btn-primary rounded-0 mb-3" onclick="addHandoverItemsModal()"> <i class="fa-regular fa-square-plus"></i>&nbsp; Add Item </button>')
                     } else {
                         $('#spanDeleteHandoverButton').html('')
                         $('#spanValidateHandoverButton').html('')
@@ -202,6 +224,42 @@
                 },
                 () => {}, {},
             );
+        }
+
+        function getHandoverItems() {
+            const handover_id = '<?= $handover[0]['id'] ?>'
+
+            $.post("<?= base_url('admin/handovers/itemlist') ?>", {
+                    handover_id: handover_id
+                })
+                .done(function(data) {
+                    $('#handover_items_table_container').html(data)
+                })
+                .fail(function() {
+                    Notiflix.Report.failure('Server Error',
+                        'Please check your connection and server status',
+                        'Okay', )
+                })
+        }
+
+        function addHandoverItemsModal() {
+            $('#modalAddHandoverItems').modal('show')
+            getAvailableItems()
+        }
+
+        function getAvailableItems() {
+            const handover_id = '<?= $handover[0]['id'] ?>'
+            Notiflix.Loading.pulse()
+            $.post("<?= base_url('admin/handovers/availableitems') ?>", {
+                    handover_id: handover_id
+                })
+                .done(function(data) {
+                    Notiflix.Loading.remove(500)
+                    setTimeout(() => {
+                        console.log(data)
+                        $('#handover_available_items_table_container').html(data)
+                    }, 500)
+                });
         }
     </script>
 </body>
