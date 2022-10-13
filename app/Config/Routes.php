@@ -92,6 +92,10 @@ $routes->post('/admin/assets/list', 'Admin::assetsList');
 $routes->get('/admin/handovers', 'Admin::handovers');
 $routes->post('/admin/handovers/list', 'Admin::handoversList');
 $routes->post('/admin/handovers/add', 'Admin::handoversAdd');
+$routes->get('/admin/handovers/detail', 'Admin::handoversDetail');
+$routes->post('/admin/handovers/get', 'Admin::handoversGet');
+$routes->post('/admin/handovers/validate', 'Admin::handoversValidate');
+$routes->post('/admin/handovers/delete', 'Admin::handoversDelete');
 
 
 

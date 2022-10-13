@@ -506,7 +506,7 @@ class Admin extends BaseController
     public function handoversList()
     {
         $db = \Config\Database::connect();
-        $query = $db->query("SELECT handovers.id, adm.name as admin, adm.id as admin_id, emp.name as employee, emp.id as employee_id, handovers.category, handovers.status FROM handovers JOIN employees as emp ON handovers.employee_id=emp.id JOIN employees as adm ON handovers.admin_emp_id=adm.id WHERE handovers.deleted_at IS NULL");
+        $query = $db->query("SELECT handovers.id, adm.name AS admin, adm.id AS admin_id, emp.name AS employee, emp.id AS employee_id, handovers.category, handovers.status, handovers.created_at FROM handovers JOIN employees AS emp ON handovers.employee_id = emp.id JOIN employees AS adm ON handovers.admin_emp_id = adm.id WHERE handovers.deleted_at IS NULL");
 
         $data['handovers'] = $query->getResult('array');
 
@@ -544,6 +544,66 @@ class Admin extends BaseController
             } else {
                 return "notfound";
             }
+        }
+    }
+
+    public function handoversDetail()
+    {
+        $handover_id = $_GET['i'];
+
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT handovers.id, adm.name AS admin, adm.id AS admin_emp_id, emp.name AS employee, emp.id AS employee_id, handovers.category, handovers.status, handovers.created_at, handovers.updated_at FROM handovers JOIN employees AS emp ON handovers.employee_id = emp.id JOIN employees AS adm ON handovers.admin_emp_id = adm.id WHERE handovers.deleted_at IS NULL AND handovers.id=$handover_id");
+
+        $data['handover'] = $query->getResult('array');
+        if ($data['handover'] == []) {
+            return redirect()->to(base_url('admin/handovers'));
+        }
+        return view('admin/handovers/detail', $data);
+    }
+
+    public function handoversGet()
+    {
+        $handover_id = $_POST['handover_id'];
+
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT handovers.id, adm.name AS admin, adm.id AS admin_emp_id, emp.name AS employee, emp.id AS employee_id, handovers.category, handovers.status, handovers.created_at, handovers.updated_at FROM handovers JOIN employees AS emp ON handovers.employee_id = emp.id JOIN employees AS adm ON handovers.admin_emp_id = adm.id WHERE handovers.deleted_at IS NULL AND handovers.id=$handover_id");
+
+        $data['handover'] = $query->getResult('array');
+        $type = $data['handover'][0]['category'] == "handover" ? "H" : "R";
+        $data['handover_no'] = "HO/" . date("d", $data['handover'][0]['created_at']) . date("m", $data['handover'][0]['created_at']) . '/' . date("y", $data['handover'][0]['created_at']) . '/' . $type . '/' . $data['handover'][0]['id'];
+        if ($data['handover'] == []) {
+            return redirect()->to(base_url('admin/handovers'));
+        }
+        return json_encode($data);
+    }
+
+    public function handoversValidate()
+    {
+        $handover_id = $_POST['handover_id'];
+
+        if ($this->handoverModel->find($handover_id)) {
+            if ($this->handoverModel->where('id', $handover_id)->set('status', 'issued')->update()) {
+                return "success";
+            } else {
+                return "failed";
+            }
+        } else {
+            return "notfound";
+        }
+    }
+
+    public function handoversDelete()
+    {
+        $handover_id = $_POST['handover_id'];
+
+        if ($this->handoverModel->find($handover_id)) {
+            if ($this->handoverModel->delete($handover_id)) {
+                return "success";
+            } else {
+                return "failed";
+            }
+        } else {
+            return "notfound";
         }
     }
 }
