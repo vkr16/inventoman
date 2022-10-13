@@ -582,9 +582,20 @@ class Admin extends BaseController
     public function handoversValidate()
     {
         $handover_id = $_POST['handover_id'];
+        $employee_id = $_POST['employee_id'];
+
+        $validationData = [
+            "status" => "issued",
+            "admin_emp_id" => $_SESSION['inventoman_user_session']
+        ];
 
         if ($this->handoverModel->find($handover_id)) {
-            if ($this->handoverModel->where('id', $handover_id)->set('status', 'issued')->update()) {
+            if ($this->handoverModel->where('id', $handover_id)->set($validationData)->update()) {
+                $items = $this->handoveritemsModel->where('handover_id', $handover_id)->find();
+                $dump = $employee_id;
+                foreach ($items as $key => $item) {
+                    $this->assetModel->where('id', $item['asset_id'])->set('current_holder', $employee_id)->update();
+                }
                 return "success";
             } else {
                 return "failed";
@@ -613,6 +624,7 @@ class Admin extends BaseController
     public function handoversItemList()
     {
         $handover_id = $_POST['handover_id'];
+        $data['status'] = $_POST['status'];
 
         $db = \Config\Database::connect();
         $query = $db->query("SELECT assets.id, assets.serial_number, assets.item_name, assets.description, assets.value FROM handover_items JOIN assets ON assets.id = handover_items.asset_id WHERE assets.deleted_at IS NULL AND handover_items.handover_id = $handover_id");

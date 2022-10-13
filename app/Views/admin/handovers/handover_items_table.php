@@ -4,7 +4,7 @@
         <th>Serial Number</th>
         <th>Item Name</th>
         <th>Description</th>
-        <th>Remove</th>
+        <th class="thx">Remove</th>
 
     </thead>
     <tbody id="handover_item_table_body">
@@ -16,7 +16,7 @@
                 <td class="align-middle"><?= $item['serial_number'] ?></td>
                 <td class="align-middle"><?= $item['item_name'] ?></td>
                 <td class="align-middle"><?= $item['description'] ?></td>
-                <td class="align-middle"><button class="btn btn-danger btn-sm rounded-0"><i class="fa-regular fa-rectangle-xmark"></i>&nbsp; Remove</button></td>
+                <td class="align-middle tdx"><button class="btn btn-danger btn-sm rounded-0"><i class="fa-regular fa-rectangle-xmark"></i>&nbsp; Remove</button></td>
 
             </tr>
         <?php
@@ -25,6 +25,11 @@
     </tbody>
 </table>
 <script>
+    if ($('#showStatus').html() != '<i class="fa-regular fa-clock text-danger"></i>&nbsp; Pending') {
+        $('.thx').html('')
+        $('.tdx').html('')
+    }
+
     var t = $('#handover_item_table').DataTable({
         columnDefs: [{
             orderable: false,

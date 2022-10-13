@@ -19,7 +19,7 @@
                 <td class="align-middle"><?= $handover['employee'] ?></td>
                 <td class="align-middle"><?= $handover['category'] ?></td>
                 <td class="align-middle"><?= $handover['status'] == 'pending' ? '<i class="fa-regular fa-clock text-danger"></i>&nbsp; Pending' : '<i class="fa-solid fa-circle-check text-primary"></i>&nbsp; Issued' ?> </td>
-                <td class="align-middle"><a href="<?= base_url('admin/handovers/detail') ?>?i=<?= $handover['id'] ?>" class="btn btn-primary rounded-0 btn-sm"><i class="fa-solid fa-up-right-from-square"></i>&nbsp; Edit Items</a></td>
+                <td class="align-middle"><a href="<?= base_url('admin/handovers/detail') ?>?i=<?= $handover['id'] ?>" class="btn btn-primary rounded-0 btn-sm"><i class="fa-solid fa-up-right-from-square"></i>&nbsp; Detail</a></td>
             </tr>
         <?php
         }

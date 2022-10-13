@@ -143,6 +143,7 @@
         }
 
         function validateHandover(handover_id) {
+            const employee_id = '<?= $handover[0]['employee_id'] ?>'
             Notiflix.Report.info(
                 'Handover Note Validation',
                 'After being validated this note will not be able to be changed and deleted again',
@@ -156,14 +157,17 @@
                         () => {
                             Notiflix.Loading.pulse()
                             $.post("<?= base_url('admin/handovers/validate') ?>", {
-                                    handover_id: handover_id
+                                    handover_id: handover_id,
+                                    employee_id: employee_id
                                 })
                                 .done(function(data) {
                                     Notiflix.Loading.remove(500)
+
                                     setTimeout(() => {
                                         if (data == "success") {
                                             Notiflix.Notify.success("Handover note has been validated successfully!")
                                             getHandoverDetail()
+                                            getHandoverItems()
                                         } else if (data == "notfound") {
                                             Notiflix.Loading.pulse()
                                             Notiflix.Notify.failure("Data not found! Client out of sync!")
@@ -233,9 +237,11 @@
 
         function getHandoverItems() {
             const handover_id = '<?= $handover[0]['id'] ?>'
+            const status = '<?= $handover[0]['status'] ?>'
 
             $.post("<?= base_url('admin/handovers/itemlist') ?>", {
-                    handover_id: handover_id
+                    handover_id: handover_id,
+                    status: status
                 })
                 .done(function(data) {
                     $('#handover_items_table_container').html(data)
@@ -284,6 +290,21 @@
                     setTimeout(() => {
                         if (data == "success") {
                             Notiflix.Notify.success("Done!")
+                        } else if (data == "assetnotfound") {
+                            Notiflix.Notify.failure("Item data not found!")
+                        } else if (data == "conflict") {
+                            Notiflix.Notify.failure("Item already on the list!")
+                        } else if (data == "failed") {
+                            Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
+                        } else if (data == "handovernotfound") {
+                            Notiflix.Report.success(
+                                'Handover Note Missing',
+                                'Handover note could not be found!',
+                                'Okay',
+                                () => {
+                                    window.location.replace('<?= base_url('admin/handovers') ?>')
+                                },
+                            );
                         }
                     }, 500);
                 })
