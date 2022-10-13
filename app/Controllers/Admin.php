@@ -623,6 +623,10 @@ class Admin extends BaseController
     {
         $handover_id = $_POST['handover_id'];
         $data = [];
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT assets.id, assets.serial_number, assets.item_name, assets.description, assets.value FROM assets WHERE assets.deleted_at IS NULL AND assets.current_holder IS NULL AND assets.id NOT IN (SELECT handover_items.asset_id FROM handover_items WHERE handover_items.handover_id = $handover_id)");
+
+        $data['items'] = $query->getResult('array');
         return view('admin/handovers/handover_available_items_table', $data);
     }
 }
