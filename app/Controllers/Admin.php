@@ -12,6 +12,7 @@ class Admin extends BaseController
     protected $invoiceModel;
     protected $assetModel;
     protected $handoverModel;
+    protected $handoveritemsModel;
 
     function __construct()
     {
@@ -20,6 +21,7 @@ class Admin extends BaseController
         $this->invoiceModel = model('InvoiceModel', true, $db);
         $this->assetModel = model('AssetModel', true, $db);
         $this->handoverModel = model('HandoverModel', true, $db);
+        $this->handoveritemsModel = model('HandoverItemsModel', true, $db);
     }
 
     public function index()
@@ -598,6 +600,7 @@ class Admin extends BaseController
 
         if ($this->handoverModel->find($handover_id)) {
             if ($this->handoverModel->delete($handover_id)) {
+                $this->handoveritemsModel->where("handover_id", $handover_id)->delete();
                 return "success";
             } else {
                 return "failed";
@@ -628,5 +631,33 @@ class Admin extends BaseController
 
         $data['items'] = $query->getResult('array');
         return view('admin/handovers/handover_available_items_table', $data);
+    }
+
+    public function handoversAddItemToList()
+    {
+        $asset_id = $_POST['asset_id'];
+        $handover_id = $_POST['handover_id'];
+
+        if ($this->assetModel->find($asset_id)) {
+            if ($this->handoverModel->find($handover_id)) {
+                if ($this->handoveritemsModel->where("asset_id = $asset_id AND handover_id = $handover_id")->find()) {
+                    return "conflict";
+                } else {
+                    $handoveritem = [
+                        "asset_id" => $asset_id,
+                        "handover_id" => $handover_id
+                    ];
+                    if ($this->handoveritemsModel->insert($handoveritem)) {
+                        return "success";
+                    } else {
+                        return "failed";
+                    }
+                }
+            } else {
+                return "handovernotfound";
+            }
+        } else {
+            return "assetnotfound";
+        }
     }
 }

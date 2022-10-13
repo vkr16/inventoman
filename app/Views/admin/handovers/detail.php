@@ -79,7 +79,7 @@
             <div class="modal-content rounded-0">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="modalAddHandoverItemsLabel">
-                        <i class="fa-regular fa-square-plus"></i>&nbsp; Add Items
+                        <i class="fa-regular fa-square-plus"></i>&nbsp; Available Items
                     </h1>
                     <button type="button" class="btn-close rounded-0 noglow" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -87,8 +87,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary rounded-0" onclick="addHandover()"><i class="fa-solid fa-floppy-disk"></i>&nbsp; Save</button>
+                    <button type="button" class="btn btn-primary rounded-0" data-bs-dismiss="modal">Done</button>
                 </div>
             </div>
         </div>
@@ -203,8 +202,14 @@
                             Notiflix.Loading.remove(500)
                             setTimeout(() => {
                                 if (data == "success") {
-                                    Notiflix.Notify.success("Handover note has been validated successfully!")
-                                    getHandoverDetail()
+                                    Notiflix.Report.success(
+                                        'Deleted',
+                                        'Handover note has been deleted successfully!',
+                                        'Okay',
+                                        () => {
+                                            window.location.replace('<?= base_url('admin/handovers') ?>')
+                                        },
+                                    );
                                 } else if (data == "failed") {
                                     Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
                                 } else if (data == "notfound") {
@@ -256,10 +261,37 @@
                 .done(function(data) {
                     Notiflix.Loading.remove(500)
                     setTimeout(() => {
-                        console.log(data)
                         $('#handover_available_items_table_container').html(data)
                     }, 500)
-                });
+                })
+                .fail(function() {
+                    Notiflix.Report.failure('Server Error',
+                        'Please check your connection and server status',
+                        'Okay', )
+                })
+        }
+
+        function addToHandoverList(asset_id) {
+            Notiflix.Loading.pulse()
+            $.post("<?= base_url('admin/handovers/additem') ?>", {
+                    asset_id: asset_id,
+                    handover_id: '<?= $handover[0]['id'] ?>'
+                })
+                .done(function(data) {
+                    getAvailableItems()
+                    getHandoverItems()
+                    Notiflix.Loading.remove(500)
+                    setTimeout(() => {
+                        if (data == "success") {
+                            Notiflix.Notify.success("Done!")
+                        }
+                    }, 500);
+                })
+                .fail(function() {
+                    Notiflix.Report.failure('Server Error',
+                        'Please check your connection and server status',
+                        'Okay', )
+                })
         }
     </script>
 </body>

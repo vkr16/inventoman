@@ -98,6 +98,7 @@ $routes->post('/admin/handovers/validate', 'Admin::handoversValidate');
 $routes->post('/admin/handovers/delete', 'Admin::handoversDelete');
 $routes->post('/admin/handovers/itemlist', 'Admin::handoversItemList');
 $routes->post('/admin/handovers/availableitems', 'Admin::handoversAvailableItems');
+$routes->post('/admin/handovers/additem', 'Admin::handoversAddItemToList');
 
 
 

@@ -16,7 +16,7 @@
                 <td class="align-middle"><?= $item['serial_number'] ?></td>
                 <td class="align-middle"><?= $item['item_name'] ?></td>
                 <td class="align-middle"><?= $item['description'] ?></td>
-                <td class="align-middle"><button class="btn btn-danger btn-sm rounded-0"><i class="fa-solid fa-xmark"></i>&nbsp; Remove</button></td>
+                <td class="align-middle"><button class="btn btn-danger btn-sm rounded-0"><i class="fa-regular fa-rectangle-xmark"></i>&nbsp; Remove</button></td>
 
             </tr>
         <?php
