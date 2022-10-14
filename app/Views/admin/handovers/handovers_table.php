@@ -14,7 +14,12 @@
         ?>
             <tr>
                 <td class="align-middle"></td>
-                <td class="align-middle">HO/<?= date("Y", $handover['created_at']) . '/' . date("m", $handover['created_at']) . '/' . date("d", $handover['created_at']) ?>/<?= $handover['category'] == "handover" ? "H" : "R" ?>/<?= $handover['id'] ?></td>
+                <td class="align-middle">
+                    <?php
+                    $type = $handover['category'] == "handover" ? "H" : "R";
+                    ?>
+                    <?= "HO/" . date("d", $handover['created_at']) . date("m", $handover['created_at']) . '/' . date("y", $handover['created_at']) . '/' . $type . '/' . $handover['id']; ?>
+                </td>
                 <td class="align-middle"><?= $handover['admin'] ?></td>
                 <td class="align-middle"><?= $handover['employee'] ?></td>
 

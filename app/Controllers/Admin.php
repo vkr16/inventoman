@@ -502,6 +502,29 @@ class Admin extends BaseController
         return view('admin/assets/assets_table', $data);
     }
 
+    public function assetsGet()
+    {
+        $asset_id = $_POST['asset_id'];
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT invoices.invoice_no, invoices.vendor, assets.serial_number, assets.item_name, assets.description, assets.value FROM assets JOIN invoices ON assets.invoice_id = invoices.id WHERE assets.deleted_at IS NULL AND assets.id=$asset_id");
+
+        $data['asset'] = $query->getResult('array');
+
+        $data['price'] = "Rp " . number_format($data['asset'][0]['value'], 0, ',', '.');
+        return json_encode($data);
+    }
+
+    public function assetsHandoverHistory()
+    {
+        $asset_id = $_POST['asset_id'];
+
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT handovers.id, adm.name as admin, adm.employee_number as employee_number, emp.name as employee, emp.employee_number as admin_emp_number, handovers.updated_at, handovers.created_at, handovers.category FROM handover_items JOIN handovers ON handovers.id=handover_items.handover_id JOIN employees as adm ON handovers.admin_emp_id=adm.id JOIN employees as emp ON handovers.employee_id=emp.id WHERE handovers.deleted_at IS NULL AND handovers.status='issued' AND handover_items.asset_id=$asset_id ORDER BY handovers.id DESC");
+
+        $data['ho_history'] = $query->getResult('array');
+        return view('admin/assets/handover_history_table', $data);
+    }
+
     /**
      * Handover Management
      */

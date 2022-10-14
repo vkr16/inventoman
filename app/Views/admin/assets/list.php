@@ -81,34 +81,38 @@
                     <button type="button" class="btn-close rounded-0 noglow" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="">
+                    <div class="mb-5">
                         <table class="table table-sm table-borderless">
                             <tr>
                                 <td style="width: 180px" class="fw-semibold">Invoice Number</td>
-                                <td>:&emsp;</td>
-                                <td>INV/234/4353/DF/234/DFFGER</td>
+                                <td style="width: 20px">:&emsp;</td>
+                                <td id="showInvoiceNo"> </td>
                             </tr>
                             <tr>
                                 <td style="width: 180px" class="fw-semibold">Serial Number</td>
-                                <td>:&emsp;</td>
-                                <td>SN98SDGFSDVB</td>
+                                <td style="width: 20px">:&emsp;</td>
+                                <td id="showSerialNumber"> </td>
                             </tr>
                             <tr>
                                 <td style="width: 180px" class="fw-semibold">Item Name</td>
-                                <td>:&emsp;</td>
-                                <td>Laptop Lenovo D300-ISS</td>
+                                <td style="width: 20px">:&emsp;</td>
+                                <td id="showItemName"> </td>
                             </tr>
                             <tr>
                                 <td style="width: 180px" class="fw-semibold">Value</td>
-                                <td>:&emsp;</td>
-                                <td>Rp 23.120.000</td>
+                                <td style="width: 20px">:&emsp;</td>
+                                <td id="showValue"> </td>
                             </tr>
                             <tr>
                                 <td style="width: 180px" class="fw-semibold">Description</td>
-                                <td>:&emsp;</td>
-                                <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fuga laudantium quis rerum esse sint nisi, voluptate even</td>
+                                <td style="width: 20px">:&emsp;</td>
+                                <td id="showDescription"> </td>
                             </tr>
                         </table>
+                    </div>
+
+                    <div id="handover_history_table_container">
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -234,7 +238,33 @@
         }
 
         function openItemDetailModal(asset_id) {
+            Notiflix.Loading.pulse()
             $('#modalAssetItemDetail').modal('show')
+            $.post("<?= base_url('admin/assets/get') ?>", {
+                    asset_id: asset_id
+                })
+                .done(function(data) {
+                    Notiflix.Loading.remove(500)
+                    const asset = JSON.parse(data)
+                    console.log(asset)
+                    console.log(asset.asset[0]['invoice_no'])
+
+                    $('#showInvoiceNo').html(asset.asset[0]['invoice_no'])
+                    $('#showSerialNumber').html(asset.asset[0]['serial_number'])
+                    $('#showItemName').html(asset.asset[0]['item_name'])
+                    $('#showValue').html(asset.price)
+                    $('#showDescription').html(asset.asset[0]['description'])
+                    getHandoverHistory(asset_id)
+                });
+        }
+
+        function getHandoverHistory(asset_id) {
+            $.post("<?= base_url('admin/assets/handoverhistory') ?>", {
+                    asset_id: asset_id
+                })
+                .done(function(data) {
+                    $('#handover_history_table_container').html(data)
+                });
         }
     </script>
 </body>

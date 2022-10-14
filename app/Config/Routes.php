@@ -85,6 +85,8 @@ $routes->post('/admin/assets/add', 'Admin::assetsAdd');
 $routes->post('/admin/assets/delete', 'Admin::assetsDelete');
 $routes->post('/admin/assets/update', 'Admin::assetsUpdate');
 $routes->post('/admin/assets/list', 'Admin::assetsList');
+$routes->post('/admin/assets/get', 'Admin::assetsGet');
+$routes->post('/admin/assets/handoverhistory', 'Admin::assetsHandoverHistory');
 
 /**
  * Handover Management
