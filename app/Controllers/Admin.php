@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use PDO;
 
 class Admin extends BaseController
 {
@@ -124,13 +125,17 @@ class Admin extends BaseController
     {
         $employee_id = $_POST['id'];
 
-        if ($this->adminModel->where('employee_id', $employee_id)->find()) {
-            return "admin";
+        if ($this->assetModel->where('current_holder', $employee_id)->find()) {
+            return "unreturned";
         } else {
-            if ($this->employeeModel->delete($employee_id)) {
-                return "success";
+            if ($this->adminModel->where('employee_id', $employee_id)->find()) {
+                return "admin";
             } else {
-                return "failed";
+                if ($this->employeeModel->delete($employee_id)) {
+                    return "success";
+                } else {
+                    return "failed";
+                }
             }
         }
     }
@@ -589,16 +594,26 @@ class Admin extends BaseController
             "admin_emp_id" => $_SESSION['inventoman_user_session']
         ];
 
-        if ($this->handoverModel->find($handover_id)) {
-            if ($this->handoverModel->where('id', $handover_id)->set($validationData)->update()) {
-                $items = $this->handoveritemsModel->where('handover_id', $handover_id)->find();
-                $dump = $employee_id;
-                foreach ($items as $key => $item) {
-                    $this->assetModel->where('id', $item['asset_id'])->set('current_holder', $employee_id)->update();
+        if ($handover = $this->handoverModel->find($handover_id)) {
+            if ($items = $this->handoveritemsModel->where('handover_id', $handover_id)->find()) {
+                if ($this->handoverModel->where('id', $handover_id)->set($validationData)->update()) {
+
+                    if ($handover['category'] == "handover") {
+                        foreach ($items as $key => $item) {
+                            $this->assetModel->where('id', $item['asset_id'])->set('current_holder', $employee_id)->update();
+                        }
+                    } else {
+                        foreach ($items as $key => $item) {
+                            $this->assetModel->where('id', $item['asset_id'])->set('current_holder', NULL)->update();
+                        }
+                    }
+
+                    return "success";
+                } else {
+                    return "failed";
                 }
-                return "success";
             } else {
-                return "failed";
+                return "empty";
             }
         } else {
             return "notfound";
@@ -627,7 +642,7 @@ class Admin extends BaseController
         $data['status'] = $_POST['status'];
 
         $db = \Config\Database::connect();
-        $query = $db->query("SELECT assets.id, assets.serial_number, assets.item_name, assets.description, assets.value FROM handover_items JOIN assets ON assets.id = handover_items.asset_id WHERE assets.deleted_at IS NULL AND handover_items.handover_id = $handover_id");
+        $query = $db->query("SELECT assets.id, assets.serial_number, assets.item_name, assets.description, assets.value,handover_items.id as handover_item_id FROM handover_items JOIN assets ON assets.id = handover_items.asset_id WHERE assets.deleted_at IS NULL AND handover_items.handover_id = $handover_id");
 
         $data['items'] = $query->getResult('array');
 
@@ -640,6 +655,18 @@ class Admin extends BaseController
         $data = [];
         $db = \Config\Database::connect();
         $query = $db->query("SELECT assets.id, assets.serial_number, assets.item_name, assets.description, assets.value FROM assets WHERE assets.deleted_at IS NULL AND assets.current_holder IS NULL AND assets.id NOT IN (SELECT handover_items.asset_id FROM handover_items WHERE handover_items.handover_id = $handover_id)");
+
+        $data['items'] = $query->getResult('array');
+        return view('admin/handovers/handover_available_items_table', $data);
+    }
+
+    public function handoversReturnableItems()
+    {
+        $handover_id = $_POST['handover_id'];
+        $employee_id = $_POST['employee_id'];
+        $data = [];
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT assets.id, assets.serial_number, assets.item_name, assets.description, assets.value FROM assets WHERE assets.deleted_at IS NULL AND assets.current_holder = $employee_id AND assets.id NOT IN( SELECT handover_items.asset_id FROM handover_items WHERE handover_items.handover_id = $handover_id)");
 
         $data['items'] = $query->getResult('array');
         return view('admin/handovers/handover_available_items_table', $data);
@@ -670,6 +697,25 @@ class Admin extends BaseController
             }
         } else {
             return "assetnotfound";
+        }
+    }
+
+    public function handoversRemoveItemFromList()
+    {
+        $handover_item_id = $_POST['handover_item_id'];
+
+        $item = $this->handoveritemsModel->find($handover_item_id);
+        $handover = $this->handoverModel->find($item['handover_id']);
+        $status = $handover['status'];
+
+        if ($status == "pending") {
+            if ($this->handoveritemsModel->delete($handover_item_id)) {
+                return "success";
+            } else {
+                return "failed";
+            }
+        } else {
+            return "failed";
         }
     }
 }

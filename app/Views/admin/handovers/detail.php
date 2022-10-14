@@ -161,13 +161,13 @@
                                     employee_id: employee_id
                                 })
                                 .done(function(data) {
+                                    getHandoverItems()
+                                    getHandoverDetail()
                                     Notiflix.Loading.remove(500)
 
                                     setTimeout(() => {
                                         if (data == "success") {
                                             Notiflix.Notify.success("Handover note has been validated successfully!")
-                                            getHandoverDetail()
-                                            getHandoverItems()
                                         } else if (data == "notfound") {
                                             Notiflix.Loading.pulse()
                                             Notiflix.Notify.failure("Data not found! Client out of sync!")
@@ -176,6 +176,8 @@
                                             }, 1000);
                                         } else if (data == "failed") {
                                             Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
+                                        } else if (data == "empty") {
+                                            Notiflix.Notify.failure("Unable to validate an empty list!")
                                         }
                                     }, 500);
                                 })
@@ -189,6 +191,7 @@
                     );
                 },
             );
+            getHandoverItems()
         }
 
         function deleteHandover(handover_id) {
@@ -255,7 +258,11 @@
 
         function addHandoverItemsModal() {
             $('#modalAddHandoverItems').modal('show')
-            getAvailableItems()
+            if ($('#showCategory').html() == 'Handover') {
+                getAvailableItems()
+            } else {
+                getReturnableItems()
+            }
         }
 
         function getAvailableItems() {
@@ -277,6 +284,27 @@
                 })
         }
 
+        function getReturnableItems() {
+            const handover_id = '<?= $handover[0]['id'] ?>'
+            const employee_id = '<?= $handover[0]['employee_id'] ?>'
+            Notiflix.Loading.pulse()
+            $.post("<?= base_url('admin/handovers/returnableitems') ?>", {
+                    handover_id: handover_id,
+                    employee_id: employee_id
+                })
+                .done(function(data) {
+                    Notiflix.Loading.remove(500)
+                    setTimeout(() => {
+                        $('#handover_available_items_table_container').html(data)
+                    }, 500)
+                })
+                .fail(function() {
+                    Notiflix.Report.failure('Server Error',
+                        'Please check your connection and server status',
+                        'Okay', )
+                })
+        }
+
         function addToHandoverList(asset_id) {
             Notiflix.Loading.pulse()
             $.post("<?= base_url('admin/handovers/additem') ?>", {
@@ -284,7 +312,11 @@
                     handover_id: '<?= $handover[0]['id'] ?>'
                 })
                 .done(function(data) {
-                    getAvailableItems()
+                    if ($('#showCategory').html() == 'Handover') {
+                        getAvailableItems()
+                    } else {
+                        getReturnableItems()
+                    }
                     getHandoverItems()
                     Notiflix.Loading.remove(500)
                     setTimeout(() => {
@@ -305,6 +337,34 @@
                                     window.location.replace('<?= base_url('admin/handovers') ?>')
                                 },
                             );
+                        }
+                    }, 500);
+                })
+                .fail(function() {
+                    Notiflix.Report.failure('Server Error',
+                        'Please check your connection and server status',
+                        'Okay', )
+                })
+        }
+
+        function handoverItemRemove(handover_item_id) {
+            Notiflix.Loading.pulse()
+            $.post("<?= base_url('admin/handovers/removeitem') ?>", {
+                    handover_item_id: handover_item_id
+                })
+                .done(function(data) {
+
+                    if ($('#showCategory').html() == 'Handover') {
+                        getAvailableItems()
+                    } else {
+                        getReturnableItems()
+                    }
+                    getHandoverItems()
+                    setTimeout(() => {
+                        if (data == "success") {
+                            Notiflix.Notify.success("Done!")
+                        } else if (data == "failed") {
+                            Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
                         }
                     }, 500);
                 })

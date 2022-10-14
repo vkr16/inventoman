@@ -5,17 +5,21 @@
         <th>Name</th>
         <th>Position</th>
         <th>Division</th>
+        <th>Delete</th>
+        <th>Edit</th>
     </thead>
     <tbody id="employees_table_body">
         <?php
         foreach ($employees as $index => $employee) {
         ?>
-            <tr role="button" onclick="employeeUpdateModal(<?= $employee['id'] ?>)">
+            <tr>
                 <td></td>
                 <td><?= $employee['employee_number'] ?></td>
                 <td><?= $employee['name'] ?></td>
                 <td><?= $employee['position'] ?></td>
                 <td><?= $employee['division'] ?></td>
+                <td><button class="btn btn-sm btn-danger rounded-0" onclick="deleteEmployee(<?= $employee['id'] ?>,'<?= $employee['name'] ?>')"><i class="fa-solid fa-trash-can"></i>&nbsp; Delete</button></td>
+                <td><button class="btn btn-sm btn-primary rounded-0" onclick="employeeUpdateModal(<?= $employee['id'] ?>)"><i class="fa-regular fa-pen-to-square"></i>&nbsp; Edit</button></td>
             </tr>
         <?php
         }

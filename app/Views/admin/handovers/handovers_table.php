@@ -17,7 +17,14 @@
                 <td class="align-middle">HO/<?= date("Y", $handover['created_at']) . '/' . date("m", $handover['created_at']) . '/' . date("d", $handover['created_at']) ?>/<?= $handover['category'] == "handover" ? "H" : "R" ?>/<?= $handover['id'] ?></td>
                 <td class="align-middle"><?= $handover['admin'] ?></td>
                 <td class="align-middle"><?= $handover['employee'] ?></td>
-                <td class="align-middle"><?= $handover['category'] ?></td>
+
+
+                <td class="align-middle">
+
+                    <?= $handover['category'] == "handover" ? ' <i class="fa-solid fa-boxes-packing"></i>&emsp;<i class="fa-solid fa-arrow-right-long text-danger"></i>&emsp;<i class="fa-solid fa-user"></i>&emsp; Handover' : ' <i class="fa-solid fa-boxes-packing"></i>&emsp;<i class="fa-solid fa-arrow-left-long text-success"></i>&emsp;<i class="fa-solid fa-user"></i>&emsp; Return' ?>
+                </td>
+
+
                 <td class="align-middle"><?= $handover['status'] == 'pending' ? '<i class="fa-regular fa-clock text-danger"></i>&nbsp; Pending' : '<i class="fa-solid fa-circle-check text-primary"></i>&nbsp; Issued' ?> </td>
                 <td class="align-middle"><a href="<?= base_url('admin/handovers/detail') ?>?i=<?= $handover['id'] ?>" class="btn btn-primary rounded-0 btn-sm"><i class="fa-solid fa-up-right-from-square"></i>&nbsp; Detail</a></td>
             </tr>

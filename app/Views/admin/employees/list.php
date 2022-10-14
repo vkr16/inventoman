@@ -100,13 +100,10 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-danger rounded-0" id="employeeDeleteButton"><i class="fa-solid fa-trash-alt"></i>&nbsp; Delete</button>
+                <div class="modal-footer">
 
-                    <span>
-                        <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary rounded-0" id="employeeUpdateButton"><i class="fa-solid fa-floppy-disk"></i>&nbsp; Save</button>
-                    </span>
+                    <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary rounded-0" id="employeeUpdateButton"><i class="fa-solid fa-floppy-disk"></i>&nbsp; Save</button>
                 </div>
             </div>
         </div>
@@ -200,7 +197,6 @@
                             $('#updatePosition').val(employee.position)
                             $('#updateDivision').val(employee.division)
                             $('#employeeUpdateButton').attr("onclick", "updateEmployee(" + id + ")")
-                            $('#employeeDeleteButton').attr("onclick", "deleteEmployee(" + id + ",'" + employee.name + "')")
                         }, 500);
                     } else {
                         Notiflix.Loading.remove(500)
@@ -297,6 +293,8 @@
                                     getEmployees()
                                 } else if (data == "success") {
                                     Notiflix.Notify.failure("FAILED! INTERNAL SERVER ERROR!")
+                                } else if (data == "unreturned") {
+                                    Notiflix.Notify.failure("Failed! This employee has assets that have not been returned!")
                                 }
                             }, 500);
                         })
