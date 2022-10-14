@@ -70,7 +70,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $defaultLocale = 'en';
+    public $defaultLocale = 'id';
 
     /**
      * --------------------------------------------------------------------------
@@ -97,7 +97,7 @@ class App extends BaseConfig
      *
      * @var string[]
      */
-    public $supportedLocales = ['en', 'id'];
+    public $supportedLocales = ['id'];
 
     /**
      * --------------------------------------------------------------------------

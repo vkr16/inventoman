@@ -18,7 +18,7 @@
                     <?php
                     $type = $handover['category'] == "handover" ? "H" : "R";
                     ?>
-                    <?= "HO/" . date("d", $handover['created_at']) . date("m", $handover['created_at']) . '/' . date("y", $handover['created_at']) . '/' . $type . '/' . $handover['id']; ?>
+                    <?= "HO/" . date("dm", $handover['created_at'])  . '/' . date("y", $handover['created_at']) . '/' . $type . '/' . date("is", $handover['created_at']); ?>
                 </td>
                 <td class="align-middle"><?= $handover['admin'] ?></td>
                 <td class="align-middle"><?= $handover['employee'] ?></td>

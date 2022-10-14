@@ -104,6 +104,8 @@ $routes->post('/admin/handovers/returnableitems', 'Admin::handoversReturnableIte
 $routes->post('/admin/handovers/additem', 'Admin::handoversAddItemToList');
 $routes->post('/admin/handovers/removeitem', 'Admin::handoversRemoveItemFromList');
 
+$routes->get('/admin/handovers/print', 'Admin::handoversPrint');
+
 
 
 

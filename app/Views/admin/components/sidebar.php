@@ -9,12 +9,12 @@
             </a>
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="<?= base_url('admin') ?>" class="nav-link rounded-0 link-dark" aria-current="page" id="sidebar_dashboard">
                         <i class="fa-solid fa-layer-group fa-fw"></i>&emsp;
                         Dashboard
                     </a>
-                </li>
+                </li> -->
                 <li>
                     <a href="<?= base_url('admin/invoices') ?>" class="nav-link rounded-0 link-dark" id="sidebar_invoices">
                         <i class="fa-solid fa-file-invoice fa-fw"></i>&emsp;
@@ -45,19 +45,20 @@
                         Administrators
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="#" class="nav-link rounded-0 link-dark" id="sidebar_logs">
                         <i class="fa-solid fa-database fa-fw"></i>&emsp;
                         Logs
                     </a>
-                </li>
+                </li> -->
             </ul>
             <hr>
             <div class="px-3">
-                <a href="#" class="d-flex align-items-center link-dark text-decoration-none">
-                    <img src="<?= base_url('public/assets/img/user.png') ?>" alt="" width="32" height="32" class="border me-3">
+                <span class="d-flex align-items-center link-dark text-decoration-none">
+                    <!-- <img src="<?= base_url('public/assets/img/user.png') ?>" alt="" width="32" height="32" class="border me-3"> -->
+                    <i class="fa-solid fa-user-tie me-3"></i>
                     <p class="mb-0"><?= $_SESSION['inventoman_user_in_session'] ?></p>
-                </a>
+                </span>
             </div>
         </div>
     </div>

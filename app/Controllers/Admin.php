@@ -27,7 +27,7 @@ class Admin extends BaseController
 
     public function index()
     {
-        return view('admin/dashboard');
+        return redirect()->to(base_url('admin/invoices'));
     }
 
 
@@ -600,7 +600,7 @@ class Admin extends BaseController
 
         $data['handover'] = $query->getResult('array');
         $type = $data['handover'][0]['category'] == "handover" ? "H" : "R";
-        $data['handover_no'] = "HO/" . date("d", $data['handover'][0]['created_at']) . date("m", $data['handover'][0]['created_at']) . '/' . date("y", $data['handover'][0]['created_at']) . '/' . $type . '/' . $data['handover'][0]['id'];
+        $data['handover_no'] = "HO/" . date("dm", $data['handover'][0]['created_at']) . '/' . date("y", $data['handover'][0]['created_at']) . '/' . $type . '/' . date("is", $data['handover'][0]['created_at']);
         if ($data['handover'] == []) {
             return redirect()->to(base_url('admin/handovers'));
         }
@@ -740,5 +740,57 @@ class Admin extends BaseController
         } else {
             return "failed";
         }
+    }
+
+    public function handoversPrint()
+    {
+        $handover_id = $_GET['i'];
+        $dayList = array(
+            'Sun' => 'Minggu',
+            'Mon' => 'Senin',
+            'Tue' => 'Selasa',
+            'Wed' => 'Rabu',
+            'Thu' => 'Kamis',
+            'Fri' => 'Jumat',
+            'Sat' => 'Sabtu'
+        );
+        $monthList = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT handovers.id, adm.name AS admin, adm.employee_number AS admin_emp_number, adm.position AS admin_position, adm.division AS admin_division, emp.name AS employee, emp.employee_number AS employee_number, emp.position AS employee_position, emp.division AS employee_division, handovers.created_at, handovers.updated_at, handovers.category FROM handovers JOIN employees AS emp ON handovers.employee_id = emp.id JOIN employees AS adm ON handovers.admin_emp_id = adm.id WHERE handovers.deleted_at IS NULL AND handovers.id = $handover_id");
+        $data['handover'] = $query->getResult('array');
+
+        $data['hari'] = $dayList[date("D", $data['handover'][0]['updated_at'])];
+        $data['bulan'] = $monthList[date("n", $data['handover'][0]['updated_at']) - 1];
+
+        if ($data['handover'][0]['category'] == "handover") {
+            $data['firstparty']['name'] = $data['handover'][0]['admin'];
+            $data['firstparty']['employee_number'] = $data['handover'][0]['admin_emp_number'];
+            $data['firstparty']['position'] = $data['handover'][0]['admin_position'];
+            $data['firstparty']['division'] = $data['handover'][0]['admin_division'];
+
+
+            $data['secondparty']['name'] = $data['handover'][0]['employee'];
+            $data['secondparty']['employee_number'] = $data['handover'][0]['employee_number'];
+            $data['secondparty']['position'] = $data['handover'][0]['employee_position'];
+            $data['secondparty']['division'] = $data['handover'][0]['employee_division'];
+        } else {
+            $data['firstparty']['name'] = $data['handover'][0]['employee'];
+            $data['firstparty']['employee_number'] = $data['handover'][0]['employee_number'];
+            $data['firstparty']['position'] = $data['handover'][0]['employee_position'];
+            $data['firstparty']['division'] = $data['handover'][0]['employee_division'];
+
+
+            $data['secondparty']['name'] = $data['handover'][0]['admin'];
+            $data['secondparty']['employee_number'] = $data['handover'][0]['admin_emp_number'];
+            $data['secondparty']['position'] = $data['handover'][0]['admin_position'];
+            $data['secondparty']['division'] = $data['handover'][0]['admin_division'];
+        }
+
+        $query = $db->query("SELECT assets.id, assets.serial_number, assets.item_name, assets.description, assets.value,handover_items.id as handover_item_id FROM handover_items JOIN assets ON assets.id = handover_items.asset_id WHERE assets.deleted_at IS NULL AND handover_items.handover_id = $handover_id");
+
+        $data['items'] = $query->getResult('array');
+
+        return view('admin/handovers/print', $data);
     }
 }

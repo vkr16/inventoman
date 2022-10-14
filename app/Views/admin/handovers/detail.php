@@ -131,7 +131,7 @@
                     } else {
                         $('#spanDeleteHandoverButton').html('')
                         $('#spanValidateHandoverButton').html('')
-                        $('#spanPrintHandoverButton').html('<button class="btn btn-primary rounded-0"> <i class="fa-solid fa-print"></i>&nbsp; Print </button>')
+                        $('#spanPrintHandoverButton').html('<a target="_blank" href="<?= base_url('admin/handovers/print') ?>?i=<?= $handover[0]['id'] ?>" class="btn btn-primary rounded-0"> <i class="fa-solid fa-print"></i>&nbsp; Print </a>')
                         $('#spanAddItemButton').html('')
                     }
                 })
