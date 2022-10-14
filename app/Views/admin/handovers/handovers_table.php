@@ -5,6 +5,7 @@
         <th>Administrator</th>
         <th>Employee</th>
         <th>Category</th>
+        <th>Date</th>
         <th>Status</th>
         <th>Action</th>
     </thead>
@@ -28,6 +29,8 @@
 
                     <?= $handover['category'] == "handover" ? ' <i class="fa-solid fa-boxes-packing"></i>&emsp;<i class="fa-solid fa-arrow-right-long text-danger"></i>&emsp;<i class="fa-solid fa-user"></i>&emsp; Handover' : ' <i class="fa-solid fa-boxes-packing"></i>&emsp;<i class="fa-solid fa-arrow-left-long text-success"></i>&emsp;<i class="fa-solid fa-user"></i>&emsp; Return' ?>
                 </td>
+
+                <td><?= date("d M y", $handover['updated_at']) ?></td>
 
 
                 <td class="align-middle"><?= $handover['status'] == 'pending' ? '<i class="fa-regular fa-clock text-danger"></i>&nbsp; Pending' : '<i class="fa-solid fa-circle-check text-primary"></i>&nbsp; Issued' ?> </td>

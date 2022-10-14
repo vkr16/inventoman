@@ -536,7 +536,7 @@ class Admin extends BaseController
     public function handoversList()
     {
         $db = \Config\Database::connect();
-        $query = $db->query("SELECT handovers.id, adm.name AS admin, adm.id AS admin_id, emp.name AS employee, emp.id AS employee_id, handovers.category, handovers.status, handovers.created_at FROM handovers JOIN employees AS emp ON handovers.employee_id = emp.id JOIN employees AS adm ON handovers.admin_emp_id = adm.id WHERE handovers.deleted_at IS NULL");
+        $query = $db->query("SELECT handovers.id, adm.name AS admin, adm.id AS admin_id, emp.name AS employee, emp.id AS employee_id, handovers.category, handovers.status, handovers.created_at,handovers.updated_at FROM handovers JOIN employees AS emp ON handovers.employee_id = emp.id JOIN employees AS adm ON handovers.admin_emp_id = adm.id WHERE handovers.deleted_at IS NULL");
 
         $data['handovers'] = $query->getResult('array');
 
@@ -601,6 +601,7 @@ class Admin extends BaseController
         $data['handover'] = $query->getResult('array');
         $type = $data['handover'][0]['category'] == "handover" ? "H" : "R";
         $data['handover_no'] = "HO/" . date("dm", $data['handover'][0]['created_at']) . '/' . date("y", $data['handover'][0]['created_at']) . '/' . $type . '/' . date("is", $data['handover'][0]['created_at']);
+        $data['tgl'] = date("d F Y H:i", $data['handover'][0]['updated_at']);
         if ($data['handover'] == []) {
             return redirect()->to(base_url('admin/handovers'));
         }

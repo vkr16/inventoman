@@ -55,6 +55,11 @@
                             <td id="showCategory"></td>
                         </tr>
                         <tr>
+                            <td width="200px">Date</td>
+                            <td>:</td>
+                            <td id="showDate"></td>
+                        </tr>
+                        <tr>
                             <td width="200px">Status</td>
                             <td>:</td>
                             <td id="showStatus"></td>
@@ -120,6 +125,7 @@
                     const handover = JSON.parse(data)
                     $('#showHandoverNo').html(handover.handover_no)
                     $('#showEmployee').html(handover.handover[0]['employee'])
+                    $('#showDate').html(handover.tgl)
                     $('#showCategory').html(handover.handover[0]['category'] == "handover" ? "Handover" : "Return")
                     $('#showStatus').html(handover.handover[0]['status'] == 'pending' ? '<i class="fa-regular fa-clock text-danger"></i>&nbsp; Pending' : '<i class="fa-solid fa-circle-check text-primary"></i>&nbsp; Issued')
 
