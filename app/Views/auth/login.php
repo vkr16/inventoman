@@ -44,7 +44,7 @@
                 </form>
 
                 <!-- <p class="mt-3">Or <a href="register.php">Create an account</a></p> -->
-                <p class="small text-muted text-center mt-5">&copy; 2022 Company Name <br> Inventoman v1.0</p>
+                <p class="small text-muted text-center mt-5">&copy; 2022 Daytech Tetra Sindo <br> Inventoman v1.0</p>
             </div>
         </div>
     </section>
