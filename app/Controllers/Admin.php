@@ -146,7 +146,9 @@ class Admin extends BaseController
      */
     public function administrators()
     {
-        return view('admin/administrators/list');
+        $data['employees'] = $this->employeeModel->findAll();
+
+        return view('admin/administrators/list', $data);
     }
 
     public function administratorsEmployeeValidation()
@@ -530,7 +532,9 @@ class Admin extends BaseController
      */
     public function handovers()
     {
-        return view('admin/handovers/list');
+        $data['employees'] = $this->employeeModel->findAll();
+
+        return view('admin/handovers/list', $data);
     }
 
     public function handoversList()

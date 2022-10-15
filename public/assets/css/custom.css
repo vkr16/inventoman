@@ -72,3 +72,17 @@ input[type="radio"]:checked,
 .datepicker{
     border-radius: 0% !important;
 }
+
+.selectpicker{
+    border-radius: 0% !important;
+}
+
+ .dropdown-toggle,.dropdown-toggle:focus, .btn-light{
+    border-radius: 0% !important;
+    background-color: white !important;
+    outline: none !important;
+}
+
+.bootstrap-select .dropdown-toggle:focus{
+    outline: none !important;
+}

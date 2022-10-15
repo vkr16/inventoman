@@ -8,6 +8,8 @@
     <title>List of Administrators - Inventory Manager</title>
     <?= $this->include('admin/components/links') ?>
     <link rel="stylesheet" href="<?= base_url('public/assets/library/datatables-1.12.1/datatables.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('public/assets/library/bootstrap-select-1.14.0/css/bootstrap-select.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('public/assets/css/custom.css') ?>">
 </head>
 
 <body>
@@ -43,26 +45,17 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div>
-                            <label for="inputEmployeeNumber">Employee Number</label>
-                            <input type="text" class="form-control my-2" name="inputEmployeeNumber" id="inputEmployeeNumber" onchange="employeeValidation($(this).val())" onkeyup="employeeValidation($(this).val())">
-                        </div>
-                        <div class="mb-3" id="employee-validation-feedback">
-                            <table class="small table-sm table table-borderless text-success" id="employee-valid" style="display: none">
-                                <tr>
-                                    <td>Name</td>
-                                    <td>: &emsp; <span id="valid-name"></span></td>
-                                </tr>
-                                <tr>
-                                    <td>Position</td>
-                                    <td>: &emsp; <span id="valid-position"></span></td>
-                                </tr>
-                                <tr>
-                                    <td>Division</td>
-                                    <td>: &emsp; <span id="valid-division"></span></td>
-                                </tr>
-                            </table>
-                            <small class="text-danger" style="display: none" id="employee-invalid">Employee number invalid</small>
+                        <div class="mb-3">
+                            <label for="inputEmployeeNumber">Employee</label>
+                            <select name="inputEmployeeNumber" class="selectpicker border mt-2" data-width="100%" data-live-search="true" id="inputEmployeeNumber">
+                                <?php
+                                foreach ($employees as $key => $employee) {
+                                ?>
+                                    <option value="<?= $employee['employee_number'] ?>"><?= $employee['employee_number'] . ' - ' . $employee['name'] ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="inputUsername">Username</label>
@@ -127,6 +120,7 @@
 
     <?= $this->include('admin/components/scripts') ?>
     <script src="<?= base_url('public/assets/library/datatables-1.12.1/datatables.min.js') ?>"></script>
+    <script src="<?= base_url('public/assets/library/bootstrap-select-1.14.0/js/bootstrap-select.min.js') ?>"></script>
     <script>
         $('#sidebar_administrators').removeClass('link-dark').addClass('active')
 
