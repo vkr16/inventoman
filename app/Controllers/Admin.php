@@ -289,7 +289,7 @@ class Admin extends BaseController
 
     public function invoicesList()
     {
-        $data['invoices'] = $this->invoiceModel->findAll();
+        $data['invoices'] = $this->invoiceModel->orderBy('id', 'desc')->findAll();
 
         return view('admin/invoices/invoices_table', $data);
     }
@@ -540,7 +540,7 @@ class Admin extends BaseController
     public function handoversList()
     {
         $db = \Config\Database::connect();
-        $query = $db->query("SELECT handovers.id, adm.name AS admin, adm.id AS admin_id, emp.name AS employee, emp.id AS employee_id, handovers.category, handovers.status, handovers.created_at,handovers.updated_at FROM handovers JOIN employees AS emp ON handovers.employee_id = emp.id JOIN employees AS adm ON handovers.admin_emp_id = adm.id WHERE handovers.deleted_at IS NULL");
+        $query = $db->query("SELECT handovers.id, adm.name AS admin, adm.id AS admin_id, emp.name AS employee, emp.id AS employee_id, handovers.category, handovers.status, handovers.created_at,handovers.updated_at FROM handovers JOIN employees AS emp ON handovers.employee_id = emp.id JOIN employees AS adm ON handovers.admin_emp_id = adm.id WHERE handovers.deleted_at IS NULL ORDER BY handovers.id DESC");
 
         $data['handovers'] = $query->getResult('array');
 
