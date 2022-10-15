@@ -17,7 +17,7 @@
                     <?php
                     $type = $ho['category'] == "handover" ? "H" : "R";
                     ?>
-                    <a href="<?= base_url('admin/handovers/detail') ?>?i=<?= $ho['id'] ?>"> <?= "HO/" . date("dm", $ho['created_at']) . '/' . date("y", $ho['created_at']) . '/' . $type . '/' . date("is", $ho['created_at']); ?></a>
+                    <a href="<?= base_url('admin/handovers/detail') ?>?i=<?= $ho['id'] ?>"> <?= "HO/" . date("dm", $ho['created_at']) . '/' . date("y", $ho['created_at']) . '/' . $type . '/' . date("His", $ho['created_at']); ?></a>
                 </td>
 
                 <td class="align-middle"><?= '[' . $ho['admin_emp_number'] . '] - ' . $ho['admin'] ?></td>

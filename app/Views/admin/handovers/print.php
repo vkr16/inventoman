@@ -15,7 +15,7 @@
     ?>
     <div class="px-5 mx-auto font-nunito-sans">
         <p class="h3 text-center mt-3 fw-semibold">BERITA ACARA SERAH TERIMA BARANG</p>
-        <p class="h6 text-center fw-semibold">No : <?= "HO/" . date("dm", $handover[0]['created_at'])  . '/' . date("y", $handover[0]['created_at']) . '/' . $type . '/' . date("is", $handover[0]['created_at'])  ?></p>
+        <p class="h6 text-center fw-semibold">No : <?= "HO/" . date("dm", $handover[0]['created_at'])  . '/' . date("y", $handover[0]['created_at']) . '/' . $type . '/' . date("His", $handover[0]['created_at'])  ?></p>
 
         <p class="lh-sm">Kami yang bertanda tangan dibawah ini. Pada hari ini <?= $hari ?> Tanggal <?= date("d", $handover[0]['updated_at']) ?> Bulan <?= $bulan ?> Tahun <?= date("Y", $handover[0]['updated_at']) ?></p>
 

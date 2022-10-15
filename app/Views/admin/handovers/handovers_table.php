@@ -19,7 +19,7 @@
                     <?php
                     $type = $handover['category'] == "handover" ? "H" : "R";
                     ?>
-                    <?= "HO/" . date("dm", $handover['created_at'])  . '/' . date("y", $handover['created_at']) . '/' . $type . '/' . date("is", $handover['created_at']); ?>
+                    <?= "HO/" . date("dm", $handover['created_at'])  . '/' . date("y", $handover['created_at']) . '/' . $type . '/' . date("His", $handover['created_at']); ?>
                 </td>
                 <td class="align-middle"><?= $handover['admin'] ?></td>
                 <td class="align-middle"><?= $handover['employee'] ?></td>
@@ -47,9 +47,6 @@
             orderable: false,
             targets: 0
         }],
-        order: [
-            [2, 'asc']
-        ]
     });
 
     t.on('order.dt search.dt', function() {
