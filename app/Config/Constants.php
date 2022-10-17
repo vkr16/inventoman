@@ -92,3 +92,13 @@ define('EVENT_PRIORITY_NORMAL', 100);
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
  */
 define('EVENT_PRIORITY_HIGH', 10);
+
+
+/**
+ * Developer Credit
+ * 
+ * Inventoman v1.0 
+ * Developer : Fikri Miftah Akmaludin
+ * Website   : https://www.akuonline.my.id
+ * Github    : https://www.github.com/vkr16
+ */
