@@ -1,65 +1,30 @@
-# CodeIgniter 4 Application Starter
+# Inventoman v1.0
 
-## What is CodeIgniter?
+## About
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](http://codeigniter.com).
+This web application is created by Fikri Miftah A. for PT. Daytech Tetra Sindo
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+This app is an Inventory Assets Management System developed with CodeIgniter 4 as main back-end framework & Bootstrap 5 as the main front-end kit
 
-More information about the plans for version 4 can be found in [the announcement](http://forum.codeigniter.com/thread-62615.html) on the forums.
+## Installation & Deployment Guide
 
-The user guide corresponding to this version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
+- Download the latest zip file from [releases](https://github.com/vkr16/inventoman/releases)
+- Extract the files
+- Upload the files into your hosting server or put it inside `htdocs` folder of your local server (eg. XAMPP)
+- Edit the base url configuration by open file `./app/Config/App.php` and edit `public $baseURL = 'http://localhost/inventoman/';`, change the `http://localhost/inveontoman/` into application path, remember to put https instead of http if your server use ssl
+- Import the `inventoman.sql` into your mysql database server
+- Edit the `.env` file. On line 42 - 45 change the database credentials based on your database server configuration.
+- Done
 
-## Installation & updates
+## Default Configuration
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+The default configuration for administrator login is
+username : `admin`
+password : `admin`
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+you can login with it and create your own credentials, after that you're free to delete it.
 
-## Setup
+## Developer
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
-
-## Important Change with index.php
-
-`index.php` is no longer in the root of the project! It has been moved inside the _public_ folder,
-for better security and separation of components.
-
-This means that you should configure your web server to "point" to your project's _public_ folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter _public/..._, as the rest of your logic and the
-framework are exposed.
-
-**Please** read the user guide for a better explanation of how CI4 works!
-
-## Repository Management
-
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 7.4 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php)
-- xml (enabled by default - don't turn it off)
-
-# inventoman
+- [Fikri Miftah Akmaludin](https://www.akuonline.my.id)
+- [Github : vkr16](https://www.github.com/vkr16)
