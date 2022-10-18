@@ -167,6 +167,7 @@
                                     employee_id: employee_id
                                 })
                                 .done(function(data) {
+                                    console.log(data)
                                     getHandoverItems()
                                     getHandoverDetail()
                                     Notiflix.Loading.remove(500)

@@ -616,10 +616,13 @@ class Admin extends BaseController
     {
         $handover_id = $_POST['handover_id'];
         $employee_id = $_POST['employee_id'];
+        $admin = $this->adminModel->find($_SESSION['inventoman_user_session']);
+        $adminEmployee  = $this->employeeModel->find($admin['employee_id']);
+        $adminsEmployeeId = $adminEmployee['id'];
 
         $validationData = [
             "status" => "issued",
-            "admin_emp_id" => $_SESSION['inventoman_user_session']
+            "admin_emp_id" => $adminsEmployeeId
         ];
 
         if ($handover = $this->handoverModel->find($handover_id)) {
